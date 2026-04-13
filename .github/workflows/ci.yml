@@ -108,7 +108,7 @@ jobs:
     with:
       php-version: ${{ matrix.php }}
       wp-version: ${{ matrix.wp }}
-      coverage: ${{ matrix.coverage }}
+      coverage: ${{ matrix.coverage || false }}
     secrets: inherit
 
   js:
