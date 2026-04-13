@@ -100,15 +100,15 @@ jobs:
       fail-fast: false
       matrix:
         php: ['8.4', '8.3', '8.2']
-        wp: ['6.9', '6.8', '6.7', '6.6']
-        include:
-          - wp: 'latest'
+        wp: ['6.8', '6.7', '6.6']
+        include: # Track coverage on the latest version only.
+          - wp: '6.9'
             php: '8.4'
             coverage: true
     with:
       php-version: ${{ matrix.php }}
       wp-version: ${{ matrix.wp }}
-      coverage: ${{ matrix.coverage }}
+      coverage: ${{ matrix.coverage || false }}
     secrets: inherit
 
   js:
