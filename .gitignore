@@ -1,0 +1,32 @@
+# macOS/IDE/AI
+.claude/
+.DS_Store
+.opencode/
+/.idea/
+/.vscode/
+AGENTS.md
+CLAUDE.md
+Thumbs.db
+
+# Dependencies
+/vendor/
+/node_modules/
+
+# Log files
+*.log
+
+# WP ENV
+/.wp-env.override.json
+/.wp-env.test.override.json
+
+# Test output
+/tests/_output/*
+!/tests/_output/.gitkeep
+
+# TypeScript
+*.tsbuildinfo
+
+# Local Configs
+/phpcs.xml
+/phpunit.xml
+/phpstan.neon

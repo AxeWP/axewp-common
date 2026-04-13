@@ -1,0 +1,124 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+      - release/**
+    types: [opened, synchronize, reopened, ready_for_review]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  detect:
+    name: Detect Changes
+    runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      php: ${{ steps.filter.outputs.php }}
+      phpcs: ${{ steps.filter.outputs.phpcs }}
+      phpstan: ${{ steps.filter.outputs.phpstan }}
+      phpunit: ${{ steps.filter.outputs.phpunit }}
+      js: ${{ steps.filter.outputs.js }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          show-progress: ${{ runner.debug == '1' && 'true' || 'false' }}
+          persist-credentials: false
+
+      - name: Detect file changes
+        id: filter
+        uses: dorny/paths-filter@fbd0ab8f3e69293af611ebaee6363fc25e6d187d # v4.0.1
+        with:
+          filters: |
+            js:
+              - '.nvmrc'
+              - '**.json'
+              - '**.*js'
+              - '**.ts'
+              - '**.ts*'
+              - 'package*.json'
+            php:
+              - '**.php'
+              - 'composer.*'
+            phpcs:
+              - '.github/workflows/ci.yml'
+              - '.phpcs.xml.dist'
+            phpstan:
+              - '.github/workflows/ci.yml'
+              - 'phpstan.neon.dist'
+            phpunit:
+              - '.github/workflows/ci.yml'
+              - 'tests/**/*.php'
+              - 'phpunit.xml.dist'
+              - '.wp-env.test.json'
+
+  phpcs:
+    name: PHPCS
+    needs: detect
+    if: needs.detect.outputs.php == 'true' || needs.detect.outputs.phpcs == 'true'
+    uses: AxeWP/plugin-infra/.github/workflows/reusable-phpcs.yml@main
+    permissions:
+      contents: read
+    with:
+      php-version: '8.2'
+    secrets: inherit
+
+  phpstan:
+    name: PHPStan
+    needs: detect
+    if: needs.detect.outputs.php == 'true' || needs.detect.outputs.phpstan == 'true'
+    uses: AxeWP/plugin-infra/.github/workflows/reusable-phpstan.yml@main
+    permissions:
+      contents: read
+    with:
+      php-version: '8.2'
+    secrets: inherit
+
+  phpunit:
+    name: PHPUnit (PHP ${{ matrix.php }}, WP ${{ matrix.wp }})
+    needs: detect
+    if: needs.detect.outputs.php == 'true' || needs.detect.outputs.phpunit == 'true'
+    uses: AxeWP/plugin-infra/.github/workflows/reusable-phpunit.yml@main
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.4', '8.3', '8.2']
+        wp: ['6.9', '6.8', '6.7', '6.6']
+        include:
+          - wp: 'latest'
+            php: '8.4'
+            coverage: true
+    with:
+      php-version: ${{ matrix.php }}
+      wp-version: ${{ matrix.wp }}
+      coverage: ${{ matrix.coverage }}
+    secrets: inherit
+
+  js:
+    name: JS Checks
+    needs: detect
+    if: needs.detect.outputs.js == 'true'
+    uses: AxeWP/plugin-infra/.github/workflows/reusable-js-lints.yml@main
+    with:
+      eslint: false
+      prettier: true
+      stylelint: false
+      tsc: true
+    secrets: inherit

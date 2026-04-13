@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 🔒 Security Issue
+    url: https://github.com/AxeWP/axewp-common/security/policy
+    about: Report security vulnerabilities privately

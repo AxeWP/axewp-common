@@ -1,0 +1,29 @@
+{
+	"name": "@axewp/common",
+	"private": true,
+	"engines": {
+		"node": ">=22.21.1",
+		"npm": ">=10.9.4"
+	},
+	"scripts": {
+		"build:dev": "node -e \"process.exit(0)\"",
+		"format": "prettier --write .",
+		"lint:php": "wp-env --config=.wp-env.test.json run cli --env-cwd=wp-content/plugins/$(basename \"$(pwd)\")/ composer run lint",
+		"lint:php:fix": "wp-env --config=.wp-env.test.json run cli --env-cwd=wp-content/plugins/$(basename \"$(pwd)\")/ composer run format",
+		"lint:php:stan": "wp-env --config=.wp-env.test.json run cli --env-cwd=wp-content/plugins/$(basename \"$(pwd)\")/ composer run phpstan",
+		"lint:js:types": "tsc --noEmit",
+		"prepare": "lefthook install",
+		"test:php": "wp-env --config=.wp-env.test.json run cli --env-cwd=wp-content/plugins/$(basename \"$(pwd)\")/ vendor/bin/phpunit -c phpunit.xml.dist",
+		"wp-env": "wp-env",
+		"wp-env:cli": "wp-env run cli --env-cwd=wp-content/plugins/$(basename \"$(pwd)\")/",
+		"wp-env:test": "wp-env --config=.wp-env.test.json"
+	},
+	"devDependencies": {
+		"@wordpress/env": "^11.3.0",
+		"@wordpress/prettier-config": "^4.43.0",
+		"lefthook": "^2.1.5",
+		"lint-staged": "^16.4.0",
+		"prettier": "npm:wp-prettier@^3",
+		"typescript": "^5.9.3"
+	}
+}
