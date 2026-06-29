@@ -19,10 +19,10 @@
 		"wp-env:test": "wp-env --config=.wp-env.test.json"
 	},
 	"devDependencies": {
-		"@wordpress/env": "^11.8.0",
-		"@wordpress/prettier-config": "^4.48.0",
+		"@wordpress/env": "^11.8.1",
+		"@wordpress/prettier-config": "^4.48.1",
 		"lefthook": "^2.1.9",
-		"lint-staged": "^17.0.7",
+		"lint-staged": "^17.0.8",
 		"prettier": "npm:wp-prettier@^3",
 		"typescript": "^5.9.3"
 	}
