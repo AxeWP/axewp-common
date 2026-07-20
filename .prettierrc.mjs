@@ -4,7 +4,7 @@ import wpConfig from '@wordpress/prettier-config';
  * @see https://prettier.io/docs/configuration
  * @type {import("prettier").Config}
  */
-const config = {
+export default {
 	...wpConfig,
 	overrides: [
 		...wpConfig.overrides,
@@ -26,5 +26,3 @@ const config = {
 		},
 	],
 };
-
-export default config;

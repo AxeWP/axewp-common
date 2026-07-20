@@ -2,8 +2,8 @@
 	"name": "@axewp/common",
 	"private": true,
 	"engines": {
-		"node": ">=22.21.1",
-		"npm": ">=10.9.4"
+		"node": ">=24.12.0",
+		"npm": ">=11.14.1"
 	},
 	"scripts": {
 		"build:dev": "node -e \"process.exit(0)\"",
@@ -19,11 +19,15 @@
 		"wp-env:test": "wp-env --config=.wp-env.test.json"
 	},
 	"devDependencies": {
-		"@wordpress/env": "^11.10.0",
-		"@wordpress/prettier-config": "^4.50.0",
+		"@wordpress/env": "^11.11.0",
+		"@wordpress/prettier-config": "^4.51.0",
 		"lefthook": "^2.1.10",
-		"lint-staged": "^17.0.8",
+		"lint-staged": "^17.1.0",
 		"prettier": "npm:wp-prettier@^3",
-		"typescript": "^5.9.3"
+		"typescript": "^7.0.2"
+	},
+	"allowScripts": {
+		"lefthook@2.1.10": true,
+		"fs-ext-extra-prebuilt@2.2.7": true
 	}
 }

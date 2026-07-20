@@ -22,8 +22,9 @@ composer require axepress/axewp-common
 | ------------------- | ------------------------------------------------ |
 | `Config`            | Hook prefix configuration for plugin integration |
 | `AbstractEncryptor` | Base class for encryption utilities              |
-| `AssetLoaderTrait`  | CSS/JS asset loading helpers                     |
+| `AssetLoaderTrait`  | Script, style, and script-module registration    |
 | `AutoloaderTrait`   | Custom class autoloading                         |
+| `VIPHelpers`        | Wrappers for VIP-only functions, with fallbacks  |
 
 ### GraphQL (`src/GraphQL/`)
 
@@ -59,6 +60,8 @@ Abstracts for registering [WPGraphQL](https://wpgraphql.com) types with a consis
 | `Singleton`       | Trait implementing the singleton pattern  |
 
 ## Development
+
+See [DEVELOPMENT.md](./docs/DEVELOPMENT.md) for the full setup, standards, and testing guide, and [CONTRIBUTING.md](./docs/CONTRIBUTING.md) before opening a PR.
 
 ### Quick Start
 

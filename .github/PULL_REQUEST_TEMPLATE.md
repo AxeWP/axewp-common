@@ -1,6 +1,7 @@
 <!--
 Thanks for taking the time to submit a Pull Request.
-Please make sure to review the relevant project guidelines before submitting your PR.
+Please make sure to review the Contribution Guidelines before submitting your PR
+https://github.com/AxeWP/axewp-common/blob/main/docs/CONTRIBUTING.md
 -->
 
 ## What
@@ -21,6 +22,10 @@ Please make sure to review the relevant project guidelines before submitting you
 
 <!-- How does your PR address the issue at hand? What are the implementation details? Please be specific. -->
 
+### AI Disclosure
+
+<!-- How did you use AI to help you write this code? Please be specific - it helps us understand and better review the changes. -->
+
 ## Testing Instructions
 
 <!-- Please include step by step instructions on how to test this PR. -->
@@ -38,7 +43,7 @@ Please make sure to review the relevant project guidelines before submitting you
 
 ## Checklist
 
-- [ ] I have reviewed the relevant project guidelines for this change.
+- [ ] I have read the [Contribution Guidelines](../docs/CONTRIBUTING.md).
 - [ ] My PR title is descriptive and follows the [conventional commit message format](https://www.conventionalcommits.org/en/v1.0.0/).
 - [ ] My code passes all lints (PHPCS, PHPStan, etc.), tests, and CI checks.
 - [ ] My code has full test coverage.

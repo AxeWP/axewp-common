@@ -2,7 +2,7 @@
 /**
  * Abstract class for implementing WordPress-safe encryption.
  *
- * Useful for encrypting sensitive data before storing it in the database, with a fallback to return raw values if OpenSSL is unavailable.
+ * Useful for encrypting sensitive data before storing it in the database.
  *
  * @package AxeWP\Common\Core
  */
@@ -22,17 +22,17 @@ if ( ! class_exists( '\\AxeWP\\Common\\Core\\AbstractEncryptor' ) ) {
 		/**
 		 * The OpenSSL encryption method.
 		 */
-		protected const METHOD = 'aes-256-gcm';
+		private const METHOD = 'aes-256-gcm';
 
 		/**
 		 * The GCM authentication tag length in bytes.
 		 */
-		protected const TAG_LENGTH = 16;
+		private const TAG_LENGTH = 16;
 
 		/**
 		 * The IV length for GCM mode.
 		 */
-		protected const IV_LENGTH = 12;
+		private const IV_LENGTH = 12;
 
 		/**
 		 * Gets the constant name to use for the encryption key.
@@ -52,11 +52,11 @@ if ( ! class_exists( '\\AxeWP\\Common\\Core\\AbstractEncryptor' ) ) {
 			if ( ! extension_loaded( 'openssl' ) ) { // @codeCoverageIgnoreStart
 				_doing_it_wrong(
 					__METHOD__,
-					'OpenSSL extension is not loaded. Returning unencrypted value.',
+					'OpenSSL extension is not loaded. Encryption cannot proceed.',
 					'0.1.0',
 				);
 
-				return $raw_value;
+				return false;
 			} // @codeCoverageIgnoreEnd
 
 			$iv  = random_bytes( self::IV_LENGTH );
@@ -87,11 +87,11 @@ if ( ! class_exists( '\\AxeWP\\Common\\Core\\AbstractEncryptor' ) ) {
 			if ( ! extension_loaded( 'openssl' ) ) { // @codeCoverageIgnoreStart
 				_doing_it_wrong(
 					__METHOD__,
-					'OpenSSL extension is not loaded. Returning unencrypted value.',
+					'OpenSSL extension is not loaded. Decryption cannot proceed.',
 					'0.1.0',
 				);
 
-				return $raw_value;
+				return false;
 			} // @codeCoverageIgnoreEnd
 
 			$decoded_value = base64_decode( $raw_value, true );

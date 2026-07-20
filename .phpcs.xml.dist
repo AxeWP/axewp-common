@@ -7,7 +7,7 @@
 	<description>Sniffs for AxeWP Common</description>
 
 	<file>./src/</file>
-	<file>./tests/php/</file>
+	<file>./tests/phpunit/</file>
 	<file>./tools/phpstan/</file>
 	<file>./axewp-common.php</file>
 
