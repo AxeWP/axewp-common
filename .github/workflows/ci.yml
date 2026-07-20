@@ -104,7 +104,7 @@ jobs:
         php: ['8.4', '8.3', '8.2']
         wp: ['7.0', '6.9', '6.8', '6.7', '6.6']
         include: # Track coverage on the latest version only.
-          - wp: 'latest'
+          - wp: '7.0'
             php: '8.5'
             coverage: true
     with:
