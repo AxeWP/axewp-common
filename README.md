@@ -60,6 +60,8 @@ Abstracts for registering [WPGraphQL](https://wpgraphql.com) types with a consis
 
 ## Development
 
+See [DEVELOPMENT.md](./docs/DEVELOPMENT.md) for the full setup, standards, and testing guide, and [CONTRIBUTING.md](./docs/CONTRIBUTING.md) before opening a PR.
+
 ### Quick Start
 
 ```bash

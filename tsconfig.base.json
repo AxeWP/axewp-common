@@ -13,37 +13,31 @@
 		"exactOptionalPropertyTypes": true,
 		"noErrorTruncation": true,
 		"noFallthroughCasesInSwitch": true,
-		"noImplicitThis": true,
 		"noImplicitOverride": true,
 		"noImplicitReturns": true,
 		"noPropertyAccessFromIndexSignature": true,
 		"noUncheckedIndexedAccess": true,
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
-		"strictFunctionTypes": true,
-		"strictNullChecks": true,
 
 		// Modules
+		// `preserve` implies `moduleResolution: bundler`.
 		"module": "preserve",
-		"moduleResolution": "bundler",
 		"resolveJsonModule": true,
 
 		// Interop Constraints
 		"esModuleInterop": true,
 		"forceConsistentCasingInFileNames": true,
 		"isolatedModules": true,
-		// @todo: make true when we can use `type: "module"` in package.json
-		"verbatimModuleSyntax": false,
+		"verbatimModuleSyntax": true,
 
 		// Language and Environment
 		"jsx": "react-jsx",
-		"lib": [ "ES2022", "DOM.Iterable", "DOM" ],
+		"lib": [ "ES2023", "DOM.Iterable", "DOM" ],
 		"moduleDetection": "force",
-		"target": "ES2022",
+		"target": "ES2023",
 
 		// Projects
-		"composite": true,
-		"disableSourceOfProjectReferenceRedirect": true,
 		"incremental": true,
 
 		// Completeness

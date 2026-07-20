@@ -33,5 +33,4 @@ parameters:
 		analyseAndScan:
 			- node_modules (?)
 	scanFiles:
-		- vendor/php-stubs/wp-cli-stubs/wp-cli-stubs.php
 		- vendor/axepress/wp-graphql-stubs/wp-graphql-stubs.php
