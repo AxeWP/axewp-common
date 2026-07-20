@@ -21,7 +21,7 @@
 	"devDependencies": {
 		"@wordpress/env": "^11.10.0",
 		"@wordpress/prettier-config": "^4.50.0",
-		"lefthook": "^2.1.9",
+		"lefthook": "^2.1.10",
 		"lint-staged": "^17.0.8",
 		"prettier": "npm:wp-prettier@^3",
 		"typescript": "^5.9.3"
