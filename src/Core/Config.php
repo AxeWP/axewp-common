@@ -9,6 +9,9 @@ declare( strict_types = 1 );
 
 namespace AxeWP\Common\Core;
 
+// Bail if accessed directly.
+defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
+
 if ( ! class_exists( '\\AxeWP\\Common\\Core\\Config' ) ) { // @codeCoverageIgnore
 	/**
 	 * Class - Config

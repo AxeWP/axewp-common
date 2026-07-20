@@ -22,8 +22,9 @@ composer require axepress/axewp-common
 | ------------------- | ------------------------------------------------ |
 | `Config`            | Hook prefix configuration for plugin integration |
 | `AbstractEncryptor` | Base class for encryption utilities              |
-| `AssetLoaderTrait`  | CSS/JS asset loading helpers                     |
+| `AssetLoaderTrait`  | Script, style, and script-module registration    |
 | `AutoloaderTrait`   | Custom class autoloading                         |
+| `VIPHelpers`        | Wrappers for VIP-only functions, with fallbacks  |
 
 ### GraphQL (`src/GraphQL/`)
 
