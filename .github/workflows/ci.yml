@@ -128,7 +128,6 @@ jobs:
   graphql:
     name: GraphQL Schema Linter
     needs: detect
-    if: needs.detect.outputs.php == 'true'
     uses: ./.github/workflows/reusable-graphql-schema-linter.yml
     with:
       php-version: ${{ needs.detect.outputs.php-version }}
