@@ -27,3 +27,13 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
+
+  upload-schema:
+    name: Upload GraphQL Schema
+    needs: release-please
+    if: ${{ needs.release-please.outputs.release_created == 'true' }}
+    uses: AxeWP/plugin-infra/.github/workflows/reusable-upload-schema-artifact.yml@main
+    with:
+      php-version: '8.5'
+      plugin-slug: 'axewp-common'
+      release-tag: ${{ needs.release-please.outputs.tag_name }}

@@ -8,10 +8,12 @@
 	"scripts": {
 		"build:dev": "node -e \"process.exit(0)\"",
 		"format": "prettier --write .",
+		"generate:schema": "wp-env --config=.wp-env.test.json run cli --env-cwd=wp-content/plugins/$(basename \"$(pwd)\")/ wp graphql generate-static-schema --output=tests/_output/schema.graphql",
 		"lint:php": "wp-env --config=.wp-env.test.json run cli --env-cwd=wp-content/plugins/$(basename \"$(pwd)\")/ composer run lint",
 		"lint:php:fix": "wp-env --config=.wp-env.test.json run cli --env-cwd=wp-content/plugins/$(basename \"$(pwd)\")/ composer run format",
 		"lint:php:stan": "wp-env --config=.wp-env.test.json run cli --env-cwd=wp-content/plugins/$(basename \"$(pwd)\")/ composer run phpstan",
 		"lint:js:types": "tsc --noEmit",
+		"lint:schema": "graphql-schema-linter --rules arguments-have-descriptions,defined-types-are-used,deprecations-have-a-reason,descriptions-are-capitalized,enum-values-all-caps,enum-values-have-descriptions,fields-have-descriptions,input-object-values-have-descriptions,relay-connection-arguments-spec,types-have-descriptions,types-are-capitalized tests/_output/schema.graphql",
 		"prepare": "lefthook install",
 		"test:php": "wp-env --config=.wp-env.test.json run cli --env-cwd=wp-content/plugins/$(basename \"$(pwd)\")/ vendor/bin/phpunit -c phpunit.xml.dist",
 		"wp-env": "wp-env",
@@ -21,6 +23,8 @@
 	"devDependencies": {
 		"@wordpress/env": "^11.11.0",
 		"@wordpress/prettier-config": "^4.51.0",
+		"graphql": "^16.0.0",
+		"graphql-schema-linter": "^3.0.1",
 		"lefthook": "^2.1.10",
 		"lint-staged": "^17.1.0",
 		"prettier": "npm:wp-prettier@^3",

@@ -124,3 +124,14 @@ jobs:
       stylelint: false
       tsc: true
     secrets: inherit
+
+  graphql:
+    name: GraphQL Schema Linter
+    needs: detect
+    uses: AxeWP/plugin-infra/.github/workflows/reusable-graphql-schema-linter.yml@main
+    with:
+      php-version: ${{ needs.detect.outputs.php-version }}
+      plugin-slug: 'axewp-common'
+      # Enable once a release has published a schema.graphql asset, otherwise the download fails.
+      # previous-schema-url: 'https://github.com/AxeWP/axewp-common/releases/latest/download/schema.graphql'
+    secrets: inherit
