@@ -128,7 +128,7 @@ jobs:
   graphql:
     name: GraphQL Schema Linter
     needs: detect
-    uses: AxeWP/plugin-infra/.github/workflows/reusable-graphql-schema-linter.yml@ci/reusable-graphql
+    uses: AxeWP/plugin-infra/.github/workflows/reusable-graphql-schema-linter.yml@main
     with:
       php-version: ${{ needs.detect.outputs.php-version }}
       plugin-slug: 'axewp-common'
