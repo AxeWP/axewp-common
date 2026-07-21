@@ -124,3 +124,13 @@ jobs:
       stylelint: false
       tsc: true
     secrets: inherit
+
+  graphql:
+    name: GraphQL Schema Linter
+    needs: detect
+    if: needs.detect.outputs.php == 'true'
+    uses: ./.github/workflows/reusable-graphql-schema-linter.yml
+    with:
+      php-version: ${{ needs.detect.outputs.php-version }}
+      plugin-slug: 'axewp-common'
+    secrets: inherit
