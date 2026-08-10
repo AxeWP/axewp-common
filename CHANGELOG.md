@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to a modified version of [Semantic Versioning](./README.md#updating-and-versioning).
 
+## [0.1.1](https://github.com/AxeWP/axewp-common/compare/v0.1.0...v0.1.1) (2026-08-10)
+
+
+### Bug Fixes
+
+* **deps-dev:** bump fast-uri from 3.1.3 to 3.1.5 ([#47](https://github.com/AxeWP/axewp-common/issues/47)) ([127faf5](https://github.com/AxeWP/axewp-common/commit/127faf5b0870c30b1f6a51952ac8d51a3831fdf7))
+* **deps-dev:** bump fast-xml-parser from 5.10.0 to 5.10.1 ([#46](https://github.com/AxeWP/axewp-common/issues/46)) ([b32e9c3](https://github.com/AxeWP/axewp-common/commit/b32e9c37fd59fa57d9cfca95c3f83a5ad53e76a0))
+* **deps-dev:** bump lint-staged in the npm-dev-minor-patch group ([#45](https://github.com/AxeWP/axewp-common/issues/45)) ([f66e518](https://github.com/AxeWP/axewp-common/commit/f66e5185523d1849f85435f0f1c1b4620c873b46))
+* **deps-dev:** bump the composer-dev-minor-patch group with 3 updates ([#44](https://github.com/AxeWP/axewp-common/issues/44)) ([485b43e](https://github.com/AxeWP/axewp-common/commit/485b43ed4e898b7cd4e257701ce25333ffaf7366))
+* **deps-dev:** bump wp-coding-standards/wpcs from 3.4.0 to 3.4.1 ([#49](https://github.com/AxeWP/axewp-common/issues/49)) ([41fdddd](https://github.com/AxeWP/axewp-common/commit/41fdddd8f8b12857330af00ba577846f27cc139b))
+
+
+### Miscellaneous Chores
+
+* update deps ([#51](https://github.com/AxeWP/axewp-common/issues/51)) ([dba23f9](https://github.com/AxeWP/axewp-common/commit/dba23f9999298387ed69210ff75319db827c52a3))
+
 ## [0.1.0](https://github.com/AxeWP/axewp-common/compare/v0.0.1...v0.1.0) (2026-07-21)
 
 
