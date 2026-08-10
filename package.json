@@ -21,13 +21,13 @@
 		"wp-env:test": "wp-env --config=.wp-env.test.json"
 	},
 	"devDependencies": {
-		"@axepress/plugin-infra": "^0.1.0",
-		"@wordpress/env": "^11.11.0",
-		"@wordpress/prettier-config": "^4.51.0",
-		"graphql": "^16.0.0",
+		"@axepress/plugin-infra": "^0.2.0",
+		"@wordpress/env": "^11.12.0",
+		"@wordpress/prettier-config": "^4.52.0",
+		"graphql": "^16.14.2",
 		"graphql-schema-linter": "^3.0.1",
 		"lefthook": "^2.1.10",
-		"lint-staged": "^17.2.0",
+		"lint-staged": "^17.3.0",
 		"prettier": "npm:wp-prettier@^3",
 		"typescript": "^7.0.2"
 	},
