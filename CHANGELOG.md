@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to a modified version of [Semantic Versioning](./README.md#updating-and-versioning).
 
+## [0.1.2](https://github.com/AxeWP/axewp-common/compare/v0.1.1...v0.1.2) (2026-08-11)
+
+
+### Miscellaneous Chores
+
+* **ci:** bump dorny/paths-filter in the github-actions-updates group ([#52](https://github.com/AxeWP/axewp-common/issues/52)) ([ad57e32](https://github.com/AxeWP/axewp-common/commit/ad57e32a436e778804a40a4fd71cf887f179e865))
+
 ## [0.1.1](https://github.com/AxeWP/axewp-common/compare/v0.1.0...v0.1.1) (2026-08-10)
 
 
