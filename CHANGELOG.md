@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to a modified version of [Semantic Versioning](./README.md#updating-and-versioning).
 
+## [0.1.2](https://github.com/AxeWP/axewp-common/compare/v0.1.1...v0.1.2) (2026-08-24)
+
+
+### Bug Fixes
+
+* **deps-dev:** bump the npm-dev-minor-patch group with 2 updates ([#55](https://github.com/AxeWP/axewp-common/issues/55)) ([2eba46d](https://github.com/AxeWP/axewp-common/commit/2eba46db20ec395ba634371b207fa8e869d6dc4b))
+* **deps-dev:** bump wp-phpunit/wp-phpunit ([#54](https://github.com/AxeWP/axewp-common/issues/54)) ([6c125bb](https://github.com/AxeWP/axewp-common/commit/6c125bb052b478205bc551b82a24516c189a24a1))
+
+
+### Miscellaneous Chores
+
+* **ci:** bump dorny/paths-filter in the github-actions-updates group ([#52](https://github.com/AxeWP/axewp-common/issues/52)) ([ad57e32](https://github.com/AxeWP/axewp-common/commit/ad57e32a436e778804a40a4fd71cf887f179e865))
+
 ## [0.1.1](https://github.com/AxeWP/axewp-common/compare/v0.1.0...v0.1.1) (2026-08-10)
 
 
