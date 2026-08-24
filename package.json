@@ -22,8 +22,8 @@
 	},
 	"devDependencies": {
 		"@axepress/plugin-infra": "^0.2.0",
-		"@wordpress/env": "^11.12.0",
-		"@wordpress/prettier-config": "^4.52.0",
+		"@wordpress/env": "^11.13.0",
+		"@wordpress/prettier-config": "^4.53.0",
 		"graphql": "^16.14.2",
 		"graphql-schema-linter": "^3.0.1",
 		"lefthook": "^2.1.10",
