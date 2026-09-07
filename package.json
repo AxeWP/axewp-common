@@ -22,12 +22,12 @@
 	},
 	"devDependencies": {
 		"@axepress/plugin-infra": "^0.2.0",
-		"@wordpress/env": "^11.13.0",
-		"@wordpress/prettier-config": "^4.53.0",
+		"@wordpress/env": "^11.14.0",
+		"@wordpress/prettier-config": "^4.54.0",
 		"graphql": "^16.14.2",
 		"graphql-schema-linter": "^3.0.1",
-		"lefthook": "^2.1.10",
-		"lint-staged": "^17.3.0",
+		"lefthook": "^2.1.12",
+		"lint-staged": "^17.4.1",
 		"prettier": "npm:wp-prettier@^3",
 		"typescript": "^7.0.2"
 	},
