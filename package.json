@@ -27,7 +27,7 @@
 		"graphql": "^16.14.2",
 		"graphql-schema-linter": "^3.0.1",
 		"lefthook": "^2.1.12",
-		"lint-staged": "^17.4.1",
+		"lint-staged": "^17.5.0",
 		"prettier": "npm:wp-prettier@^3",
 		"typescript": "^7.0.2"
 	},
