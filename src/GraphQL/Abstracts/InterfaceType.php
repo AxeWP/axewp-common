@@ -51,7 +51,7 @@ if ( ! class_exists( '\\AxeWP\\Common\\GraphQL\\Abstracts\\InterfaceType' ) ) {
 			$config['fields'] = static::get_fields();
 
 			if ( method_exists( static::class, 'resolve_type' ) ) {
-				$config['resolveType'] = [ static::class, 'resolve_type' ];
+				$config['resolveType'] = static::resolve_type( ... );
 			}
 
 			if ( method_exists( static::class, 'get_interfaces' ) ) {
