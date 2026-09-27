@@ -23,7 +23,7 @@ final class TypeResolverTraitTestDouble {
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function get_resolved_type_name( $value ): ?string {
+	protected static function get_resolved_type_name( $value ): ?string {
 		return is_array( $value ) ? ( $value['type'] ?? null ) : null;
 	}
 
@@ -60,11 +60,9 @@ class TypeResolverTraitTest extends TestCase {
 	 * Test that resolve_type throws when type resolution fails.
 	 */
 	public function test_resolve_type_throws_when_resolution_fails(): void {
-		try {
-			TypeResolverTraitTestDouble::call_resolve_type( [] );
-			$this->fail( 'Expected error was not thrown.' );
-		} catch ( \Throwable $throwable ) {
-			$this->assertStringContainsString( 'failed to resolve', $throwable->getMessage() );
-		}
+		$this->expectException( \UnexpectedValueException::class );
+		$this->expectExceptionMessage( 'failed to resolve' );
+
+		TypeResolverTraitTestDouble::call_resolve_type( [] );
 	}
 }

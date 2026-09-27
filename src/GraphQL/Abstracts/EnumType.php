@@ -41,7 +41,7 @@ if ( ! class_exists( '\\AxeWP\\Common\\GraphQL\\Abstracts\\EnumType' ) ) {
 		 *
 		 * @return array<string,EnumValueConfig>
 		 */
-		abstract public static function get_values(): array;
+		abstract protected static function get_values(): array;
 
 		/**
 		 * {@inheritDoc}

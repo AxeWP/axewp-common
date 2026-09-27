@@ -14,7 +14,7 @@ namespace AxeWP\Common\Contracts\Interfaces;
 // Bail if accessed directly.
 defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
 
-if ( ! interface_exists( '\\AxeWP\\Common\\Interfaces\\Registrable' ) ) { // @codeCoverageIgnore
+if ( ! interface_exists( '\\AxeWP\\Common\\Contracts\\Interfaces\\Registrable' ) ) { // @codeCoverageIgnore
 	/**
 	 * Interface - Registrable
 	 */

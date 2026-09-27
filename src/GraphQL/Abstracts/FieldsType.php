@@ -22,13 +22,6 @@ if ( ! class_exists( '\\AxeWP\\Common\\GraphQL\\Abstracts\\FieldsType' ) ) {
 	 */
 	abstract class FieldsType implements GraphQLType, TypeWithFields {
 		/**
-		 * {@inheritDoc}
-		 */
-		public function init(): void {
-			add_action( 'graphql_register_types', [ $this, 'register' ] );
-		}
-
-		/**
 		 * Defines the GraphQL type name registered in WPGraphQL.
 		 */
 		abstract protected static function type_name(): string;
@@ -37,6 +30,13 @@ if ( ! class_exists( '\\AxeWP\\Common\\GraphQL\\Abstracts\\FieldsType' ) ) {
 		 * Gets the GraphQL type name.
 		 */
 		abstract public static function get_type_name(): string;
+
+		/**
+		 * {@inheritDoc}
+		 */
+		public function init(): void {
+			add_action( 'graphql_register_types', [ $this, 'register' ] );
+		}
 
 		/**
 		 * Register Fields to the GraphQL Schema.

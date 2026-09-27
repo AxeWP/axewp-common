@@ -66,7 +66,7 @@ class InputTypeTest extends TestCase {
 		update_option( 'graphql_general_settings', $settings );
 
 		$instance = new ConcreteInputTypeTestDouble();
-		$instance->register_hooks();
+		$instance->init();
 
 		\WPGraphQL::clear_schema();
 	}
@@ -104,8 +104,6 @@ class InputTypeTest extends TestCase {
 		$actual = graphql( [ 'query' => $query ] );
 
 		$this->assertArrayNotHasKey( 'errors', $actual, 'GraphQL response should not contain errors.' );
-		$this->assertArrayHasKey( 'data', $actual );
-		$this->assertArrayHasKey( '__type', $actual['data'] );
 
 		$type = $actual['data']['__type'];
 

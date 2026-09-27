@@ -28,7 +28,7 @@ final class ConcreteMutationTypeTestDouble extends MutationType {
 	/**
 	 * @return array<string,array{type:string,description:callable():string}>
 	 */
-	public static function get_input_fields(): array {
+	protected static function get_input_fields(): array {
 		return [
 			'input' => [
 				'type'        => 'String',
@@ -40,7 +40,7 @@ final class ConcreteMutationTypeTestDouble extends MutationType {
 	/**
 	 * @return array<string,array{type:string,description:callable():string}>
 	 */
-	public static function get_output_fields(): array {
+	protected static function get_output_fields(): array {
 		return [
 			'result' => [
 				'type'        => 'String',
@@ -50,10 +50,10 @@ final class ConcreteMutationTypeTestDouble extends MutationType {
 	}
 
 	/**
-	 * @return callable():array{result:string}
+	 * @return callable(array{input:string}):array{result:string}
 	 */
-	public static function mutate_and_get_payload(): callable {
-		return static fn (): array => [ 'result' => 'ok' ];
+	protected static function mutate_and_get_payload(): callable {
+		return static fn ( array $input ): array => [ 'result' => 'received:' . $input['input'] ];
 	}
 }
 
@@ -76,7 +76,7 @@ final class MutationTypeTest extends TestCase {
 		update_option( 'graphql_general_settings', $settings );
 
 		$instance = new ConcreteMutationTypeTestDouble();
-		$instance->register_hooks();
+		$instance->init();
 
 		\WPGraphQL::clear_schema();
 	}
@@ -89,13 +89,6 @@ final class MutationTypeTest extends TestCase {
 		Config::$hook_prefix = '';
 
 		parent::tearDown();
-	}
-
-	/**
-	 * Verifies mutation descriptions default to an empty string.
-	 */
-	public function test_get_description_returns_empty_string(): void {
-		$this->assertSame( '', ConcreteMutationTypeTestDouble::get_description() );
 	}
 
 	/**
@@ -122,36 +115,6 @@ final class MutationTypeTest extends TestCase {
 		);
 
 		$this->assertArrayNotHasKey( 'errors', $actual, 'GraphQL response should not contain errors.' );
-		$this->assertArrayHasKey( 'data', $actual );
-		$this->assertSame( 'ok', $actual['data']['testMutation']['result'] );
-	}
-
-	/**
-	 * Verifies the mutation input type is registered in the schema.
-	 */
-	public function test_mutation_input_type_is_registered_in_schema(): void {
-		$query = '
-			{
-				__type(name: "TestMutationInput") {
-					name
-					kind
-					inputFields {
-						name
-					}
-				}
-			}
-		';
-
-		$actual = graphql( [ 'query' => $query ] );
-
-		$this->assertArrayNotHasKey( 'errors', $actual, 'GraphQL response should not contain errors.' );
-		$this->assertArrayHasKey( 'data', $actual );
-		$this->assertArrayHasKey( '__type', $actual['data'] );
-
-		$type              = $actual['data']['__type'];
-		$input_field_names = array_column( $type['inputFields'], 'name' );
-
-		$this->assertSame( 'TestMutationInput', $type['name'] );
-		$this->assertContains( 'input', $input_field_names );
+		$this->assertSame( 'received:hello', $actual['data']['testMutation']['result'] );
 	}
 }

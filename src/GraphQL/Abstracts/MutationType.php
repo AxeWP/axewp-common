@@ -55,19 +55,19 @@ if ( ! class_exists( '\\AxeWP\\Common\\GraphQL\\Abstracts\\MutationType' ) ) {
 		 *
 		 * @return array<string,MutationInputFieldConfig>
 		 */
-		abstract public static function get_input_fields(): array;
+		abstract protected static function get_input_fields(): array;
 
 		/**
 		 * Gets the fields for the type.
 		 *
 		 * @return array<string,MutationOutputFieldConfig>
 		 */
-		abstract public static function get_output_fields(): array;
+		abstract protected static function get_output_fields(): array;
 
 		/**
 		 * Defines the mutation data modification closure.
 		 */
-		abstract public static function mutate_and_get_payload(): callable;
+		abstract protected static function mutate_and_get_payload(): callable;
 
 		/**
 		 * Register mutations to the GraphQL Schema.
@@ -79,7 +79,7 @@ if ( ! class_exists( '\\AxeWP\\Common\\GraphQL\\Abstracts\\MutationType' ) ) {
 		/**
 		 * {@inheritDoc}
 		 */
-		public static function get_description(): string {
+		protected static function get_description(): string {
 			// Descriptions are inside the mutation.
 			return '';
 		}

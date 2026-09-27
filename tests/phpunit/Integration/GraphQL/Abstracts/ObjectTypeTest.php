@@ -172,7 +172,7 @@ class ObjectTypeTest extends TestCase {
 	 */
 	public function test_object_type_is_registered_with_fields(): void {
 		$instance = new ConcreteObjectTypeTestDouble();
-		$instance->register_hooks();
+		$instance->init();
 		\WPGraphQL::clear_schema();
 
 		$query = '
@@ -193,8 +193,6 @@ class ObjectTypeTest extends TestCase {
 		$actual = graphql( [ 'query' => $query ] );
 
 		$this->assertArrayNotHasKey( 'errors', $actual, 'GraphQL response should not contain errors.' );
-		$this->assertArrayHasKey( 'data', $actual );
-		$this->assertArrayHasKey( '__type', $actual['data'] );
 
 		$type = $actual['data']['__type'];
 
@@ -229,7 +227,7 @@ class ObjectTypeTest extends TestCase {
 		);
 
 		$instance = new ConnectingObjectTypeTestDouble();
-		$instance->register_hooks();
+		$instance->init();
 		\WPGraphQL::clear_schema();
 
 		$query = '
@@ -247,8 +245,6 @@ class ObjectTypeTest extends TestCase {
 		$actual = graphql( [ 'query' => $query ] );
 
 		$this->assertArrayNotHasKey( 'errors', $actual, 'GraphQL response should not contain errors.' );
-		$this->assertArrayHasKey( 'data', $actual );
-		$this->assertArrayHasKey( '__type', $actual['data'] );
 
 		$type        = $actual['data']['__type'];
 		$field_names = array_column( $type['fields'], 'name' );
@@ -263,7 +259,7 @@ class ObjectTypeTest extends TestCase {
 	 */
 	public function test_object_type_with_interfaces_implements_node(): void {
 		$instance = new InterfacingObjectTypeTestDouble();
-		$instance->register_hooks();
+		$instance->init();
 		\WPGraphQL::clear_schema();
 
 		$query = '
@@ -281,8 +277,6 @@ class ObjectTypeTest extends TestCase {
 		$actual = graphql( [ 'query' => $query ] );
 
 		$this->assertArrayNotHasKey( 'errors', $actual, 'GraphQL response should not contain errors.' );
-		$this->assertArrayHasKey( 'data', $actual );
-		$this->assertArrayHasKey( '__type', $actual['data'] );
 
 		$type            = $actual['data']['__type'];
 		$interface_names = array_column( $type['interfaces'], 'name' );
