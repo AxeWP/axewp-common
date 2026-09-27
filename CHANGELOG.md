@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to a modified version of [Semantic Versioning](./README.md#updating-and-versioning).
 
+## [0.2.0](https://github.com/AxeWP/axewp-common/compare/v0.1.3...v0.2.0) (2026-09-27)
+
+
+### ⚠ BREAKING CHANGES
+
+* scope down methods to `protected` ([#68](https://github.com/AxeWP/axewp-common/issues/68))
+
+### Features
+
+* scope down methods to `protected` ([#68](https://github.com/AxeWP/axewp-common/issues/68)) ([d7663cc](https://github.com/AxeWP/axewp-common/commit/d7663ccdf40710a6eefbdade5552b4b1f01fb108))
+
 ## [0.1.3](https://github.com/AxeWP/axewp-common/compare/v0.1.2...v0.1.3) (2026-09-27)
 
 
