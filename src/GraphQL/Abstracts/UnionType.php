@@ -55,9 +55,10 @@ if ( ! class_exists( '\\AxeWP\\Common\\GraphQL\\Abstracts\\UnionType' ) ) {
 		 * @return UnionTypeConfig
 		 */
 		protected static function get_type_config(): array {
-			$config                = parent::get_type_config();
-			$config['typeNames']   = static::get_possible_types();
-			$config['resolveType'] = [ static::class, 'resolve_type' ];
+			$config              = parent::get_type_config();
+			$config['typeNames'] = static::get_possible_types();
+
+			$config['resolveType'] = static::resolve_type( ... );
 
 			return $config;
 		}

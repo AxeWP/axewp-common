@@ -250,6 +250,62 @@ final class InterfaceTypeTest extends TestCase {
 	}
 
 	/**
+	 * Test that WPGraphQL can call the (protected) trait resolver to resolve the interface to its concrete type.
+	 */
+	public function test_resolving_interface_type_resolves_to_concrete_type(): void {
+		add_action(
+			'graphql_register_types',
+			static function (): void {
+				register_graphql_object_type(
+					'ResolvingTestObject',
+					[
+						'description' => static fn (): string => 'Resolving test object',
+						'interfaces'  => [ 'ResolvingTestInterface' ],
+						'fields'      => [
+							'id' => [
+								'type'        => 'ID',
+								'description' => static fn (): string => 'The ID',
+							],
+						],
+					]
+				);
+
+				register_graphql_field(
+					'RootQuery',
+					'resolvingTestInterface',
+					[
+						'type'        => 'ResolvingTestInterface',
+						'description' => static fn (): string => 'A value that resolves to a ResolvingTestObject',
+						'resolve'     => static fn (): array => [
+							'type' => 'ResolvingTestObject',
+							'id'   => 'test-id',
+						],
+					]
+				);
+			}
+		);
+
+		$instance = new ResolvingInterfaceTypeTestDouble();
+		$instance->register_hooks();
+		\WPGraphQL::clear_schema();
+
+		$query = '
+			{
+				resolvingTestInterface {
+					__typename
+					id
+				}
+			}
+		';
+
+		$actual = graphql( [ 'query' => $query ] );
+
+		$this->assertArrayNotHasKey( 'errors', $actual, 'GraphQL response should not contain errors.' );
+		$this->assertSame( 'ResolvingTestObject', $actual['data']['resolvingTestInterface']['__typename'] );
+		$this->assertSame( 'test-id', $actual['data']['resolvingTestInterface']['id'] );
+	}
+
+	/**
 	 * Test that an interface implementing other interfaces is registered correctly.
 	 */
 	public function test_interfacing_interface_type_implements_node(): void {
