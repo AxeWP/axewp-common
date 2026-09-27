@@ -27,7 +27,7 @@ if ( ! trait_exists( '\\AxeWP\\Common\\GraphQL\\Traits\\TypeResolverTrait' ) ) {
 		 *
 		 * @param mixed $value The value from the resolver of the parent field.
 		 */
-		abstract public static function get_resolved_type_name( $value ): ?string;
+		abstract protected static function get_resolved_type_name( $value ): ?string;
 
 		/**
 		 * The type resolver function used in the `resolveType` callback of the GraphQL type.

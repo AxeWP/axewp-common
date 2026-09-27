@@ -37,7 +37,7 @@ final class ConcreteEnumTypeTestDouble extends EnumType {
 	 *
 	 * @return array<string,array{value:string,description:callable():string}>
 	 */
-	public static function get_values(): array {
+	protected static function get_values(): array {
 		return [
 			'VALUE_A' => [
 				'value'       => 'a',
@@ -66,7 +66,7 @@ class EnumTypeTest extends TestCase {
 		update_option( 'graphql_general_settings', $settings );
 
 		$instance = new ConcreteEnumTypeTestDouble();
-		$instance->register_hooks();
+		$instance->init();
 
 		\WPGraphQL::clear_schema();
 	}
@@ -100,8 +100,6 @@ class EnumTypeTest extends TestCase {
 		$actual = graphql( [ 'query' => $query ] );
 
 		$this->assertArrayNotHasKey( 'errors', $actual, 'GraphQL response should not contain errors.' );
-		$this->assertArrayHasKey( 'data', $actual );
-		$this->assertArrayHasKey( '__type', $actual['data'] );
 
 		$type = $actual['data']['__type'];
 

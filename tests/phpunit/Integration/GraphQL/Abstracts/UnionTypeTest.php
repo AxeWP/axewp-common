@@ -35,7 +35,7 @@ final class ConcreteUnionTypeTestDouble extends UnionType {
 	/**
 	 * @return string[]
 	 */
-	public static function get_possible_types(): array {
+	protected static function get_possible_types(): array {
 		return [ 'TypeA', 'TypeB' ];
 	}
 
@@ -44,7 +44,7 @@ final class ConcreteUnionTypeTestDouble extends UnionType {
 	 *
 	 * @param mixed $value Source value passed to the resolver.
 	 */
-	public static function get_resolved_type_name( $value ): ?string {
+	protected static function get_resolved_type_name( $value ): ?string {
 		return is_array( $value ) ? ( $value['type'] ?? null ) : null;
 	}
 }
@@ -82,29 +82,10 @@ final class UnionTypeTest extends TestCase {
 	 * Test that the union type is registered with its possible types.
 	 */
 	public function test_union_type_is_registered_with_possible_types(): void {
-		// Register the member types so the union can reference them.
-		add_action(
-			'graphql_register_types',
-			static function (): void {
-				foreach ( [ 'TypeA', 'TypeB' ] as $type_name ) {
-					register_graphql_object_type(
-						$type_name,
-						[
-							'description' => static fn (): string => "Test type {$type_name}",
-							'fields'      => [
-								'id' => [
-									'type'        => 'ID',
-									'description' => static fn (): string => 'The ID',
-								],
-							],
-						]
-					);
-				}
-			}
-		);
+		self::register_member_types();
 
 		$instance = new ConcreteUnionTypeTestDouble();
-		$instance->register_hooks();
+		$instance->init();
 		\WPGraphQL::clear_schema();
 
 		$query = '
@@ -122,8 +103,6 @@ final class UnionTypeTest extends TestCase {
 		$actual = graphql( [ 'query' => $query ] );
 
 		$this->assertArrayNotHasKey( 'errors', $actual, 'GraphQL response should not contain errors.' );
-		$this->assertArrayHasKey( 'data', $actual );
-		$this->assertArrayHasKey( '__type', $actual['data'] );
 
 		$type       = $actual['data']['__type'];
 		$type_names = array_column( $type['possibleTypes'], 'name' );
@@ -135,40 +114,22 @@ final class UnionTypeTest extends TestCase {
 	}
 
 	/**
-	 * Test that union types load eagerly by verifying the type exists in the schema.
+	 * Test that union types are included in the schema even when unreferenced.
 	 */
 	public function test_union_type_is_eagerly_loaded(): void {
-		// Register the member types so the union can reference them.
-		add_action(
-			'graphql_register_types',
-			static function (): void {
-				foreach ( [ 'TypeA', 'TypeB' ] as $type_name ) {
-					register_graphql_object_type(
-						$type_name,
-						[
-							'description' => static fn (): string => "Test type {$type_name}",
-							'fields'      => [
-								'id' => [
-									'type'        => 'ID',
-									'description' => static fn (): string => 'The ID',
-								],
-							],
-						]
-					);
-				}
-			}
-		);
+		self::register_member_types();
 
 		$instance = new ConcreteUnionTypeTestDouble();
-		$instance->register_hooks();
+		$instance->init();
 		\WPGraphQL::clear_schema();
 
-		// If the type appears in introspection without being referenced by a field,
-		// it was loaded eagerly.
+		// Nothing references the type, so it's only in the schema's type map if it was loaded eagerly.
 		$query = '
 			{
-				__type(name: "TestUnionType") {
-					name
+				__schema {
+					types {
+						name
+					}
 				}
 			}
 		';
@@ -176,31 +137,18 @@ final class UnionTypeTest extends TestCase {
 		$actual = graphql( [ 'query' => $query ] );
 
 		$this->assertArrayNotHasKey( 'errors', $actual, 'GraphQL response should not contain errors.' );
-		$this->assertNotNull( $actual['data']['__type'] );
+		$this->assertContains( 'TestUnionType', array_column( $actual['data']['__schema']['types'], 'name' ) );
 	}
 
 	/**
 	 * Test that WPGraphQL can call the (protected) trait resolver to resolve each union member to its concrete type.
 	 */
 	public function test_union_type_resolves_to_concrete_types(): void {
+		self::register_member_types();
+
 		add_action(
 			'graphql_register_types',
 			static function (): void {
-				foreach ( [ 'TypeA', 'TypeB' ] as $type_name ) {
-					register_graphql_object_type(
-						$type_name,
-						[
-							'description' => static fn (): string => "Test type {$type_name}",
-							'fields'      => [
-								'id' => [
-									'type'        => 'ID',
-									'description' => static fn (): string => 'The ID',
-								],
-							],
-						]
-					);
-				}
-
 				register_graphql_field(
 					'RootQuery',
 					'testUnionItems',
@@ -223,7 +171,7 @@ final class UnionTypeTest extends TestCase {
 		);
 
 		$instance = new ConcreteUnionTypeTestDouble();
-		$instance->register_hooks();
+		$instance->init();
 		\WPGraphQL::clear_schema();
 
 		$query = '
@@ -255,6 +203,31 @@ final class UnionTypeTest extends TestCase {
 				],
 			],
 			$actual['data']['testUnionItems']
+		);
+	}
+
+	/**
+	 * Registers the object types the union resolves to.
+	 */
+	private static function register_member_types(): void {
+		add_action(
+			'graphql_register_types',
+			static function (): void {
+				foreach ( [ 'TypeA', 'TypeB' ] as $type_name ) {
+					register_graphql_object_type(
+						$type_name,
+						[
+							'description' => static fn (): string => "Test type {$type_name}",
+							'fields'      => [
+								'id' => [
+									'type'        => 'ID',
+									'description' => static fn (): string => 'The ID',
+								],
+							],
+						]
+					);
+				}
+			}
 		);
 	}
 }

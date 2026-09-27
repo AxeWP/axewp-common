@@ -82,16 +82,6 @@ class FieldsTypeTest extends TestCase {
 	}
 
 	/**
-	 * Test that init adds the graphql_register_types action.
-	 */
-	public function test_init_adds_graphql_register_types_action(): void {
-		$instance = new ConcreteFieldsTypeTestDouble();
-		$instance->init();
-
-		$this->assertNotFalse( has_action( 'graphql_register_types', [ $instance, 'register' ] ) );
-	}
-
-	/**
 	 * Test that fields are registered on the target type in the schema.
 	 */
 	public function test_fields_are_registered_on_target_type(): void {
@@ -108,8 +98,6 @@ class FieldsTypeTest extends TestCase {
 		$actual = graphql( [ 'query' => $query ] );
 
 		$this->assertArrayNotHasKey( 'errors', $actual, 'GraphQL response should not contain errors.' );
-		$this->assertArrayHasKey( 'data', $actual );
-		$this->assertArrayHasKey( '__type', $actual['data'] );
 
 		$field_names = array_column( $actual['data']['__type']['fields'], 'name' );
 		$this->assertContains( 'testField', $field_names );

@@ -15,44 +15,9 @@ use AxeWP\Common\Tests\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 /**
- * Connection type test double with noop register.
+ * Connection type test double that registers a connection with a filtered subset of its args.
  */
 final class ConcreteConnectionTypeTestDouble extends ConnectionType {
-	/**
-	 * @return non-empty-string
-	 */
-	protected static function type_name(): string {
-		return 'TestConnectionType';
-	}
-
-	/**
-	 * @return array<string,array{type:string,description:callable():string}>
-	 */
-	protected static function connection_args(): array {
-		return [
-			'first' => [
-				'type'        => 'Int',
-				'description' => static fn (): string => 'First N items',
-			],
-			'after' => [
-				'type'        => 'String',
-				'description' => static fn (): string => 'After cursor',
-			],
-		];
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function register(): void {
-		// Noop for testing.
-	}
-}
-
-/**
- * Connection type test double that actually registers a connection.
- */
-final class RegisteringConnectionTypeTestDouble extends ConnectionType {
 	/**
 	 * @return non-empty-string
 	 */
@@ -65,9 +30,13 @@ final class RegisteringConnectionTypeTestDouble extends ConnectionType {
 	 */
 	protected static function connection_args(): array {
 		return [
-			'testArg' => [
+			'includedArg' => [
 				'type'        => 'String',
-				'description' => static fn (): string => 'A test arg',
+				'description' => static fn (): string => 'An included arg',
+			],
+			'excludedArg' => [
+				'type'        => 'String',
+				'description' => static fn (): string => 'An excluded arg',
 			],
 		];
 	}
@@ -77,15 +46,13 @@ final class RegisteringConnectionTypeTestDouble extends ConnectionType {
 	 */
 	public function register(): void {
 		register_graphql_connection(
-			array_merge(
-				self::get_connection_config(
-					[
-						'fromType'      => 'RootQuery',
-						'fromFieldName' => 'testConnection',
-						'resolve'       => static fn () => null,
-					]
-				),
-				[ 'connectionArgs' => self::connection_args() ]
+			self::get_connection_config(
+				[
+					'fromType'       => 'RootQuery',
+					'fromFieldName'  => 'testConnection',
+					'resolve'        => static fn () => null,
+					'connectionArgs' => self::get_connection_args( [ 'includedArg' ] ),
+				]
 			)
 		);
 	}
@@ -121,25 +88,10 @@ final class ConnectionTypeTest extends TestCase {
 	}
 
 	/**
-	 * Verifies all connection args are returned without filtering.
+	 * Verifies the connection defaults to the type name as `toType` and only exposes the filtered args.
 	 */
-	public function test_get_connection_args(): void {
-		$args = ConcreteConnectionTypeTestDouble::get_connection_args( null );
-
-		$this->assertArrayHasKey( 'first', $args );
-		$this->assertArrayHasKey( 'after', $args );
-
-		// Test they can be filtered.
-		$args = ConcreteConnectionTypeTestDouble::get_connection_args( [ 'first' ] );
-
-		$this->assertSame( [ 'first' ], array_keys( $args ) );
-	}
-
-	/**
-	 * Verifies a connection is registered in the schema with its args.
-	 */
-	public function test_connection_is_registered_in_schema(): void {
-		$instance = new RegisteringConnectionTypeTestDouble();
+	public function test_connection_is_registered_with_filtered_args(): void {
+		$instance = new ConcreteConnectionTypeTestDouble();
 		$instance->init();
 		\WPGraphQL::clear_schema();
 
@@ -151,11 +103,19 @@ final class ConnectionTypeTest extends TestCase {
 						args {
 							name
 							type {
-								name
-								kind
 								inputFields {
 									name
 								}
+							}
+						}
+					}
+				}
+				edge: __type(name: "RootQueryToTestConnectionConnectionEdge") {
+					fields {
+						name
+						type {
+							ofType {
+								name
 							}
 						}
 					}
@@ -166,34 +126,23 @@ final class ConnectionTypeTest extends TestCase {
 		$actual = graphql( [ 'query' => $query ] );
 
 		$this->assertArrayNotHasKey( 'errors', $actual, 'GraphQL response should not contain errors.' );
-		$this->assertArrayHasKey( 'data', $actual );
-		$this->assertArrayHasKey( '__type', $actual['data'] );
 
-		$fields           = $actual['data']['__type']['fields'];
-		$connection_field = null;
-
-		foreach ( $fields as $field ) {
-			if ( 'testConnection' === $field['name'] ) {
-				$connection_field = $field;
-				break;
-			}
-		}
+		$fields           = array_column( $actual['data']['__type']['fields'], null, 'name' );
+		$connection_field = $fields['testConnection'] ?? null;
 
 		$this->assertNotNull( $connection_field, 'testConnection field should exist on RootQuery.' );
 
+		$edge_fields = array_column( $actual['data']['edge']['fields'], null, 'name' );
+		$this->assertSame( 'Post', $edge_fields['node']['type']['ofType']['name'] );
+
 		// WPGraphQL wraps custom connection args inside a 'where' input field.
-		$where_arg = null;
-		foreach ( $connection_field['args'] as $arg ) {
-			if ( 'where' === $arg['name'] ) {
-				$where_arg = $arg;
-				break;
-			}
-		}
+		$args      = array_column( $connection_field['args'], null, 'name' );
+		$where_arg = $args['where'] ?? null;
 
 		$this->assertNotNull( $where_arg, 'testConnection should have a where argument.' );
-		$this->assertSame( 'INPUT_OBJECT', $where_arg['type']['kind'] );
 
 		$where_field_names = array_column( $where_arg['type']['inputFields'], 'name' );
-		$this->assertContains( 'testArg', $where_field_names );
+		$this->assertContains( 'includedArg', $where_field_names );
+		$this->assertNotContains( 'excludedArg', $where_field_names );
 	}
 }

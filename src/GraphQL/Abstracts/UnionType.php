@@ -40,7 +40,7 @@ if ( ! class_exists( '\\AxeWP\\Common\\GraphQL\\Abstracts\\UnionType' ) ) {
 		 *
 		 * @return string[]
 		 */
-		abstract public static function get_possible_types(): array;
+		abstract protected static function get_possible_types(): array;
 
 		/**
 		 * {@inheritDoc}

@@ -88,7 +88,7 @@ if ( ! class_exists( '\\AxeWP\\Common\\GraphQL\\Abstracts\\ConnectionType' ) ) {
 		 *
 		 * @return array<string,ConnectionArgsConfig>
 		 */
-		final public static function get_connection_args( ?array $filter_by = null ): array {
+		final protected static function get_connection_args( ?array $filter_by = null ): array {
 			$connection_args = static::connection_args();
 
 			if ( empty( $filter_by ) ) {

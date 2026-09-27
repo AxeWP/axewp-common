@@ -9,7 +9,6 @@ declare( strict_types = 1 );
 
 namespace AxeWP\Common\GraphQL\Abstracts;
 
-use AxeWP\Common\Contracts\Interfaces\Registrable;
 use AxeWP\Common\GraphQL\Interfaces\GraphQLType;
 use AxeWP\Common\GraphQL\Traits\TypeNameTrait;
 
@@ -28,7 +27,7 @@ if ( ! class_exists( '\\AxeWP\\Common\\GraphQL\\Abstracts\\Type' ) ) {
 	 *
 	 * @template TypeConfig of array
 	 */
-	abstract class Type implements GraphQLType, Registrable {
+	abstract class Type implements GraphQLType {
 		use TypeNameTrait;
 
 		/**
@@ -40,13 +39,6 @@ if ( ! class_exists( '\\AxeWP\\Common\\GraphQL\\Abstracts\\Type' ) ) {
 		 * {@inheritDoc}
 		 */
 		public function init(): void {
-			add_action( 'graphql_register_types', [ $this, 'register' ] );
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		public function register_hooks(): void {
 			add_action( 'graphql_register_types', [ $this, 'register' ] );
 		}
 

@@ -83,7 +83,7 @@ final class ResolvingInterfaceTypeTestDouble extends InterfaceType {
 	 *
 	 * @param mixed $value Source value passed to the resolver.
 	 */
-	public static function get_resolved_type_name( $value ): ?string {
+	protected static function get_resolved_type_name( $value ): ?string {
 		return is_array( $value ) ? ( $value['type'] ?? null ) : null;
 	}
 }
@@ -160,7 +160,7 @@ final class InterfaceTypeTest extends TestCase {
 	 */
 	public function test_interface_type_is_registered_with_fields(): void {
 		$instance = new ConcreteInterfaceTypeTestDouble();
-		$instance->register_hooks();
+		$instance->init();
 		\WPGraphQL::clear_schema();
 
 		$query = '
@@ -181,8 +181,6 @@ final class InterfaceTypeTest extends TestCase {
 		$actual = graphql( [ 'query' => $query ] );
 
 		$this->assertArrayNotHasKey( 'errors', $actual, 'GraphQL response should not contain errors.' );
-		$this->assertArrayHasKey( 'data', $actual );
-		$this->assertArrayHasKey( '__type', $actual['data'] );
 
 		$type = $actual['data']['__type'];
 
@@ -194,43 +192,18 @@ final class InterfaceTypeTest extends TestCase {
 	}
 
 	/**
-	 * Test that interface types load eagerly by verifying the type exists in the schema.
+	 * Test that interface types are included in the schema even when unreferenced.
 	 */
 	public function test_interface_type_is_eagerly_loaded(): void {
 		$instance = new ConcreteInterfaceTypeTestDouble();
-		$instance->register_hooks();
+		$instance->init();
 		\WPGraphQL::clear_schema();
 
-		// If the type appears in introspection without being referenced by a field,
-		// it was loaded eagerly.
+		// Nothing references the type, so it's only in the schema's type map if it was loaded eagerly.
 		$query = '
 			{
-				__type(name: "TestInterfaceType") {
-					name
-				}
-			}
-		';
-
-		$actual = graphql( [ 'query' => $query ] );
-
-		$this->assertArrayNotHasKey( 'errors', $actual, 'GraphQL response should not contain errors.' );
-		$this->assertNotNull( $actual['data']['__type'] );
-	}
-
-	/**
-	 * Test that an interface with a type resolver is registered successfully.
-	 */
-	public function test_resolving_interface_type_is_registered(): void {
-		$instance = new ResolvingInterfaceTypeTestDouble();
-		$instance->register_hooks();
-		\WPGraphQL::clear_schema();
-
-		$query = '
-			{
-				__type(name: "ResolvingTestInterface") {
-					name
-					kind
-					fields {
+				__schema {
+					types {
 						name
 					}
 				}
@@ -240,13 +213,7 @@ final class InterfaceTypeTest extends TestCase {
 		$actual = graphql( [ 'query' => $query ] );
 
 		$this->assertArrayNotHasKey( 'errors', $actual, 'GraphQL response should not contain errors.' );
-		$this->assertArrayHasKey( 'data', $actual );
-		$this->assertArrayHasKey( '__type', $actual['data'] );
-
-		$type = $actual['data']['__type'];
-
-		$this->assertSame( 'ResolvingTestInterface', $type['name'] );
-		$this->assertSame( 'INTERFACE', $type['kind'] );
+		$this->assertContains( 'TestInterfaceType', array_column( $actual['data']['__schema']['types'], 'name' ) );
 	}
 
 	/**
@@ -286,7 +253,7 @@ final class InterfaceTypeTest extends TestCase {
 		);
 
 		$instance = new ResolvingInterfaceTypeTestDouble();
-		$instance->register_hooks();
+		$instance->init();
 		\WPGraphQL::clear_schema();
 
 		$query = '
@@ -310,7 +277,7 @@ final class InterfaceTypeTest extends TestCase {
 	 */
 	public function test_interfacing_interface_type_implements_node(): void {
 		$instance = new InterfacingInterfaceTypeTestDouble();
-		$instance->register_hooks();
+		$instance->init();
 		\WPGraphQL::clear_schema();
 
 		$query = '
@@ -327,8 +294,6 @@ final class InterfaceTypeTest extends TestCase {
 		$actual = graphql( [ 'query' => $query ] );
 
 		$this->assertArrayNotHasKey( 'errors', $actual, 'GraphQL response should not contain errors.' );
-		$this->assertArrayHasKey( 'data', $actual );
-		$this->assertArrayHasKey( '__type', $actual['data'] );
 
 		$type            = $actual['data']['__type'];
 		$interface_names = array_column( $type['interfaces'], 'name' );
