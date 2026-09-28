@@ -26,6 +26,37 @@ composer require axepress/axewp-common
 | `AutoloaderTrait`   | Custom class autoloading                         |
 | `VIPHelpers`        | Wrappers for VIP-only functions, with fallbacks  |
 
+#### Encrypting values
+
+Extend `AbstractEncryptor` with the name of the `wp-config.php` constant that holds the key:
+
+```php
+final class Encryptor extends AbstractEncryptor {
+	protected static function get_constant_key(): string {
+		return 'MY_PLUGIN_ENCRYPTION_KEY';
+	}
+}
+
+$stored = Encryptor::encrypt( $secret ); // 'enc:v1:...'
+$secret = Encryptor::decrypt( $stored );
+```
+
+`encrypt()` and `decrypt()` return a `WP_Error` on failure. `decrypt()` returns `not_encrypted` if the value lacks the prefix, and `decryption_failed` if it's malformed, was tampered with, or was encrypted with a different key. `is_encrypted()` only checks the prefix.
+
+Set the constant to a long random string, e.g. from `openssl rand -base64 32`. If it isn't set, `LOGGED_IN_KEY` is used instead (with a `_doing_it_wrong()` notice), and values become unreadable if the salts are rotated. If neither is set, a `LogicException` is thrown.
+
+After you add the constant, values encrypted with `LOGGED_IN_KEY` still decrypt. Re-encrypt them to move them to the new key.
+
+Subclasses can override these static properties:
+
+| Property      | Default       | Notes                                                                                          |
+| ------------- | ------------- | ---------------------------------------------------------------------------------------------- |
+| `$method`     | `aes-256-gcm` | Must be an authenticated (AEAD) cipher. Other ciphers need custom `encrypt()` and `decrypt()`. |
+| `$tag_length` | `16`          | Authentication tag length, in bytes.                                                           |
+| `$prefix`     | `enc:v1:`     | Marks and versions encrypted values.                                                           |
+
+Changing any of these, the constant's name, or its value means existing values can no longer be decrypted.
+
 ### GraphQL (`src/GraphQL/`)
 
 Abstracts for registering [WPGraphQL](https://wpgraphql.com) types with a consistent API:
