@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to a modified version of [Semantic Versioning](./README.md#updating-and-versioning).
 
+## [0.3.0](https://github.com/AxeWP/axewp-common/compare/v0.2.0...v0.3.0) (2026-09-28)
+
+
+### ⚠ BREAKING CHANGES
+
+* refactor AbstractEncryptor for composability
+
+### Features
+
+* refactor AbstractEncryptor for composability ([9a6a709](https://github.com/AxeWP/axewp-common/commit/9a6a70978b1fb17be647521d123664ecbc18d857))
+
 ## [0.2.0](https://github.com/AxeWP/axewp-common/compare/v0.1.3...v0.2.0) (2026-09-27)
 
 ### ⚠ BREAKING CHANGES
