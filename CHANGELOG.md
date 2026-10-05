@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to a modified version of [Semantic Versioning](./README.md#updating-and-versioning).
 
+## [0.3.1](https://github.com/AxeWP/axewp-common/compare/v0.3.0...v0.3.1) (2026-10-05)
+
+
+### Bug Fixes
+
+* **deps-dev:** bump @axepress/plugin-infra ([#72](https://github.com/AxeWP/axewp-common/issues/72)) ([496a686](https://github.com/AxeWP/axewp-common/commit/496a686d3270fa74107b82ab41c534e5bc55cc5f))
+* **deps:** bump brace-expansion ([#74](https://github.com/AxeWP/axewp-common/issues/74)) ([eccb895](https://github.com/AxeWP/axewp-common/commit/eccb895ccda61b502ab04f6e73df5e97e7c50613))
+
 ## [0.3.0](https://github.com/AxeWP/axewp-common/compare/v0.2.0...v0.3.0) (2026-09-28)
 
 
