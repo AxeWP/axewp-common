@@ -125,6 +125,25 @@ final class PlaceholderKeyEncryptorTestDouble extends AbstractEncryptor {
 }
 
 /**
+ * Test double with no usable secret, even though LOGGED_IN_KEY is defined.
+ */
+final class NoKeyEncryptorTestDouble extends AbstractEncryptor {
+	/**
+	 * {@inheritDoc}
+	 */
+	protected static function get_constant_key(): string {
+		return 'AXEWP_COMMON_NO_KEY_ENCRYPTION_KEY';
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected static function get_secret( string $constant_name ): string {
+		return '';
+	}
+}
+
+/**
  * Class - AbstractEncryptorTest
  */
 #[CoversClass( AbstractEncryptor::class )]
@@ -387,6 +406,17 @@ class AbstractEncryptorTest extends TestCase {
 
 		$this->assertIsString( $encrypted );
 		$this->assertSame( 'secret', PlaceholderKeyEncryptorTestDouble::decrypt( $encrypted ) );
+	}
+
+	/**
+	 * Test that a missing key returns an error instead of throwing.
+	 */
+	public function test_missing_key_returns_error(): void {
+		$encrypted = self::PREFIX . base64_encode( str_repeat( "\0", 32 ) );
+
+		$this->assert_error_code( 'no_encryption_key', NoKeyEncryptorTestDouble::encrypt( 'secret' ) );
+		$this->assert_error_code( 'no_encryption_key', NoKeyEncryptorTestDouble::decrypt( $encrypted ) );
+		$this->assertFalse( NoKeyEncryptorTestDouble::needs_reencryption( $encrypted ) );
 	}
 
 	/**

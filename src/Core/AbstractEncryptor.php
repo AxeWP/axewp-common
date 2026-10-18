@@ -233,12 +233,12 @@ if ( ! class_exists( '\\AxeWP\\Common\\Core\\AbstractEncryptor' ) ) {
 			}
 
 			// If you're here, you're either not on a live site or have a serious security issue.
-			if ( [] === $keys ) { // @codeCoverageIgnoreStart
+			if ( [] === $keys ) {
 				return new \WP_Error(
 					'no_encryption_key',
 					sprintf( 'No encryption key defined. Please define %s or LOGGED_IN_KEY in wp-config.php.', $constant_key )
 				);
-			} // @codeCoverageIgnoreEnd
+			}
 
 			return $keys;
 		}
