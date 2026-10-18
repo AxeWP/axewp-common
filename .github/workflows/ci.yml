@@ -147,5 +147,4 @@ jobs:
     with:
       php-version: ${{ needs.detect.outputs.php-version }}
       plugin-slug: 'axewp-common'
-      # Enable once a release has published a schema.graphql asset, otherwise the download fails.
-      # previous-schema-url: 'https://github.com/AxeWP/axewp-common/releases/latest/download/schema.graphql'
+      previous-schema-url: 'https://github.com/AxeWP/axewp-common/releases/latest/download/schema.graphql'
