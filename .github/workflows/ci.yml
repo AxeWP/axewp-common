@@ -140,6 +140,7 @@ jobs:
   graphql:
     name: GraphQL Schema Linter
     needs: detect
+    if: needs.detect.outputs.js == 'true' || needs.detect.outputs.php == 'true'
     uses: AxeWP/plugin-infra/.github/workflows/reusable-graphql-schema-linter.yml@47e89d06e15846d34d5f6eb7dfcd3a4dccd83750 # v0.4.0
     permissions:
       contents: read
