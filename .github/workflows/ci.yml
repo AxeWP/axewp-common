@@ -51,6 +51,7 @@ jobs:
             actionlint:
               - '.github/workflows/**'
             js:
+              - '.github/workflows/ci.yml'
               - '.nvmrc'
               - '**.json'
               - '**.*js'
