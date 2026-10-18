@@ -29,6 +29,7 @@ jobs:
     outputs:
       # Used to determine what version of PHP to use for the other jobs.
       php-version: '8.5'
+      actionlint: ${{ steps.filter.outputs.actionlint }}
       php: ${{ steps.filter.outputs.php }}
       phpcs: ${{ steps.filter.outputs.phpcs }}
       phpstan: ${{ steps.filter.outputs.phpstan }}
@@ -47,6 +48,8 @@ jobs:
         uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
         with:
           filters: |
+            actionlint:
+              - '.github/workflows/**'
             js:
               - '.nvmrc'
               - '**.json'
@@ -69,11 +72,19 @@ jobs:
               - 'phpunit.xml.dist'
               - '.wp-env.test.json'
 
+  actionlint:
+    name: actionlint
+    needs: detect
+    if: needs.detect.outputs.actionlint == 'true'
+    uses: AxeWP/plugin-infra/.github/workflows/reusable-actionlint.yml@a98dead25c1052f9f9163e2105ed7922e1333a88 # AxeWP/plugin-infra#42
+    permissions:
+      contents: read
+
   phpcs:
     name: PHPCS
     needs: detect
     if: needs.detect.outputs.php == 'true' || needs.detect.outputs.phpcs == 'true'
-    uses: AxeWP/plugin-infra/.github/workflows/reusable-phpcs.yml@c1201b2a13344c68c0b0c651a8dfc6b6265f22b7 # v0.1.0
+    uses: AxeWP/plugin-infra/.github/workflows/reusable-phpcs.yml@a98dead25c1052f9f9163e2105ed7922e1333a88 # AxeWP/plugin-infra#42
     permissions:
       contents: read
     with:
@@ -84,7 +95,7 @@ jobs:
     name: PHPStan
     needs: detect
     if: needs.detect.outputs.php == 'true' || needs.detect.outputs.phpstan == 'true'
-    uses: AxeWP/plugin-infra/.github/workflows/reusable-phpstan.yml@c1201b2a13344c68c0b0c651a8dfc6b6265f22b7 # v0.1.0
+    uses: AxeWP/plugin-infra/.github/workflows/reusable-phpstan.yml@a98dead25c1052f9f9163e2105ed7922e1333a88 # AxeWP/plugin-infra#42
     permissions:
       contents: read
     with:
@@ -95,7 +106,7 @@ jobs:
     name: PHPUnit (PHP ${{ matrix.php }}, WP ${{ matrix.wp }})
     needs: detect
     if: needs.detect.outputs.php == 'true' || needs.detect.outputs.phpunit == 'true'
-    uses: AxeWP/plugin-infra/.github/workflows/reusable-phpunit.yml@c1201b2a13344c68c0b0c651a8dfc6b6265f22b7 # v0.1.0
+    uses: AxeWP/plugin-infra/.github/workflows/reusable-phpunit.yml@a98dead25c1052f9f9163e2105ed7922e1333a88 # AxeWP/plugin-infra#42
     permissions:
       contents: read
     strategy:
@@ -117,7 +128,7 @@ jobs:
     name: JS Checks
     needs: detect
     if: needs.detect.outputs.js == 'true'
-    uses: AxeWP/plugin-infra/.github/workflows/reusable-js-lints.yml@c1201b2a13344c68c0b0c651a8dfc6b6265f22b7 # v0.1.0
+    uses: AxeWP/plugin-infra/.github/workflows/reusable-js-lints.yml@a98dead25c1052f9f9163e2105ed7922e1333a88 # AxeWP/plugin-infra#42
     with:
       eslint: false
       prettier: true
@@ -128,7 +139,7 @@ jobs:
   graphql:
     name: GraphQL Schema Linter
     needs: detect
-    uses: AxeWP/plugin-infra/.github/workflows/reusable-graphql-schema-linter.yml@c1201b2a13344c68c0b0c651a8dfc6b6265f22b7 # v0.1.0
+    uses: AxeWP/plugin-infra/.github/workflows/reusable-graphql-schema-linter.yml@a98dead25c1052f9f9163e2105ed7922e1333a88 # AxeWP/plugin-infra#42
     with:
       php-version: ${{ needs.detect.outputs.php-version }}
       plugin-slug: 'axewp-common'
