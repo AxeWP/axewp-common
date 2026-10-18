@@ -39,6 +39,11 @@ if ( ! class_exists( '\\AxeWP\\Common\\Core\\AbstractEncryptor' ) ) {
 		protected static string $prefix = 'enc:v1:';
 
 		/**
+		 * The sample value shipped in wp-config-sample.php. Treated as undefined.
+		 */
+		private const PLACEHOLDER_SECRET = 'put your unique phrase here';
+
+		/**
 		 * Gets the constant name to use for the encryption key.
 		 *
 		 * Also used to derive the key, so changing it makes existing values undecryptable.
@@ -56,6 +61,13 @@ if ( ! class_exists( '\\AxeWP\\Common\\Core\\AbstractEncryptor' ) ) {
 		 */
 		public static function is_encrypted( string $value ): bool {
 			return str_starts_with( $value, static::$prefix );
+		}
+
+		/**
+		 * Whether the implementing class's constant is undefined, empty, or the sample placeholder, so the fallback key (if any) is used.
+		 */
+		public static function is_using_fallback_key(): bool {
+			return '' === static::get_secret( static::get_constant_key() );
 		}
 
 		/**
@@ -107,6 +119,32 @@ if ( ! class_exists( '\\AxeWP\\Common\\Core\\AbstractEncryptor' ) ) {
 		 * @return string|\WP_Error The decrypted value, or an error if it isn't encrypted, was tampered with, or can't be decrypted.
 		 */
 		public static function decrypt( string $raw_value ): string|\WP_Error {
+			$decrypted = self::decrypt_with_any_key( $raw_value );
+
+			return is_wp_error( $decrypted ) ? $decrypted : $decrypted['value'];
+		}
+
+		/**
+		 * Whether a value only decrypts with LOGGED_IN_KEY, though the implementing class's constant is now defined, so it should be re-encrypted.
+		 *
+		 * Returns false for values that don't decrypt, since they can't be re-encrypted.
+		 *
+		 * @param string $encrypted_value The encrypted value.
+		 */
+		public static function needs_reencryption( string $encrypted_value ): bool {
+			$decrypted = self::decrypt_with_any_key( $encrypted_value );
+
+			return ! is_wp_error( $decrypted ) && $decrypted['key_index'] > 0;
+		}
+
+		/**
+		 * Decrypts a value with the first key that works.
+		 *
+		 * @param string $raw_value The encrypted value.
+		 *
+		 * @return array{value:string,key_index:int}|\WP_Error The decrypted value and the index of the key that decrypted it, or an error.
+		 */
+		private static function decrypt_with_any_key( string $raw_value ): array|\WP_Error {
 			if ( ! static::is_encrypted( $raw_value ) ) {
 				return new \WP_Error( 'not_encrypted', 'The value is not encrypted.' );
 			}
@@ -130,7 +168,7 @@ if ( ! class_exists( '\\AxeWP\\Common\\Core\\AbstractEncryptor' ) ) {
 			$ciphertext = substr( $decoded_value, $iv_length + static::$tag_length );
 
 			// Fallback to other keys if decryption with the primary key fails.
-			foreach ( $keys as $key ) {
+			foreach ( $keys as $key_index => $key ) {
 				$value = openssl_decrypt(
 					$ciphertext,
 					static::$method,
@@ -141,11 +179,27 @@ if ( ! class_exists( '\\AxeWP\\Common\\Core\\AbstractEncryptor' ) ) {
 				);
 
 				if ( false !== $value ) {
-					return $value;
+					return [
+						'value'     => $value,
+						'key_index' => $key_index,
+					];
 				}
 			}
 
 			return new \WP_Error( 'decryption_failed', 'The value could not be decrypted.' );
+		}
+
+		/**
+		 * Gets the value of a secret constant.
+		 *
+		 * @param string $constant_name The constant name.
+		 *
+		 * @return string The value, or an empty string if the constant is undefined, empty, or WordPress's sample placeholder.
+		 */
+		protected static function get_secret( string $constant_name ): string {
+			$secret = defined( $constant_name ) ? constant( $constant_name ) : '';
+
+			return is_string( $secret ) && self::PLACEHOLDER_SECRET !== $secret ? $secret : '';
 		}
 
 		/**
@@ -155,16 +209,10 @@ if ( ! class_exists( '\\AxeWP\\Common\\Core\\AbstractEncryptor' ) ) {
 		 * Once the constant is defined, LOGGED_IN_KEY stays as a fallback so values encrypted before then still decrypt.
 		 *
 		 * @return non-empty-list<string>|\WP_Error The derived keys, or an error if OpenSSL, a key, or a valid $method isn't available.
-		 *
-		 * @throws \LogicException If no encryption key is defined.
 		 */
 		protected static function get_keys(): array|\WP_Error {
 			if ( ! extension_loaded( 'openssl' ) ) { // @codeCoverageIgnoreStart
-				$message = 'OpenSSL extension is not loaded. Encryption cannot proceed.';
-
-				_doing_it_wrong( __METHOD__, esc_html( $message ), '0.1.0' );
-
-				return new \WP_Error( 'openssl_missing', $message );
+				return new \WP_Error( 'openssl_missing', 'OpenSSL extension is not loaded. Encryption cannot proceed.' );
 			} // @codeCoverageIgnoreEnd
 
 			$key_length = (int) openssl_cipher_key_length( static::$method );
@@ -174,26 +222,11 @@ if ( ! class_exists( '\\AxeWP\\Common\\Core\\AbstractEncryptor' ) ) {
 			}
 
 			$constant_key = static::get_constant_key();
-			$primary      = defined( $constant_key ) ? (string) constant( $constant_key ) : '';
+			$keys         = [];
 
-			// Log if the primary key is not set, indicating that the fallback key will be used.
-			if ( empty( $primary ) ) {
-				_doing_it_wrong(
-					__METHOD__,
-					sprintf(
-						'Using %s for encryption key is not recommended. Define %s in wp-config.php for better security.',
-						esc_html( 'LOGGED_IN_KEY' ),
-						esc_html( $constant_key ),
-					),
-					'0.1.0'
-				);
-			}
+			foreach ( [ $constant_key, 'LOGGED_IN_KEY' ] as $secret_constant ) {
+				$secret = static::get_secret( $secret_constant );
 
-			$fallback = defined( 'LOGGED_IN_KEY' ) ? (string) constant( 'LOGGED_IN_KEY' ) : '';
-
-			$keys = [];
-
-			foreach ( [ $primary, $fallback ] as $secret ) {
 				if ( '' !== $secret ) {
 					$keys[] = hash_hkdf( 'sha256', $secret, $key_length, $constant_key . '|' . static::$method );
 				}
@@ -201,11 +234,9 @@ if ( ! class_exists( '\\AxeWP\\Common\\Core\\AbstractEncryptor' ) ) {
 
 			// If you're here, you're either not on a live site or have a serious security issue.
 			if ( [] === $keys ) { // @codeCoverageIgnoreStart
-				throw new \LogicException(
-					sprintf(
-						'No encryption key defined. Please define %s or LOGGED_IN_KEY in wp-config.php.',
-						esc_html( $constant_key ),
-					)
+				return new \WP_Error(
+					'no_encryption_key',
+					sprintf( 'No encryption key defined. Please define %s or LOGGED_IN_KEY in wp-config.php.', $constant_key )
 				);
 			} // @codeCoverageIgnoreEnd
 

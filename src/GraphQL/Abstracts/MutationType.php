@@ -20,16 +20,16 @@ if ( ! class_exists( '\\AxeWP\\Common\\GraphQL\\Abstracts\\MutationType' ) ) {
 	 * phpcs:disable SlevomatCodingStandard.Namespaces.FullyQualifiedClassNameInAnnotation -- PHPStan formatting.
 	 *
 	 * @phpstan-type MutationInputFieldConfig array{
-	 *   type:string|array<string,string|array<string,string>>,
+	 *   type:string|array<string,string|array<string,string|array<string,string>>>,
 	 *   description:callable():string,
 	 *   defaultValue?:string
 	 * }
 	 *
 	 * @phpstan-type MutationOutputFieldConfig array{
-	 *   type:string|array<string,string|array<string,string>>,
+	 *   type:string|array<string,string|array<string,string|array<string,string>>>,
 	 *   description:callable():string,
 	 *   args?:array<string,array{
-	 *     type:string|array<string,string|array<string,string>>,
+	 *     type:string|array<string,string|array<string,string|array<string,string>>>,
 	 *     description:callable():string,
 	 *     defaultValue?:mixed
 	 *   }>,

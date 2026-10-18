@@ -18,7 +18,7 @@ if ( ! interface_exists( '\\AxeWP\\Common\\GraphQL\\Interfaces\\TypeWithInputFie
 	 * Interface - TypeWithInputFields.
 	 *
 	 * @phpstan-type InputFieldConfig array{
-	 *   type:string|array<string,string|array<string,string>>,
+	 *   type:string|array<string,string|array<string,string|array<string,string>>>,
 	 *   description: callable(): string,
 	 *   defaultValue?:string
 	 * }

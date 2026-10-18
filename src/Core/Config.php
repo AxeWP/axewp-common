@@ -36,7 +36,7 @@ if ( ! class_exists( '\\AxeWP\\Common\\Core\\Config' ) ) { // @codeCoverageIgnor
 		 */
 		public static function hook_prefix(): string {
 			if ( empty( self::$hook_prefix ) ) {
-				_doing_it_wrong( __METHOD__, esc_html__( 'The hook prefix has not been set. Use ::set_hook_prefix() to set it.', 'axewp' ), '0.1.0' );
+				_doing_it_wrong( __METHOD__, 'The hook prefix has not been set. Use ::set_hook_prefix() to set it.', '0.1.0' );
 			}
 
 			return self::$hook_prefix;

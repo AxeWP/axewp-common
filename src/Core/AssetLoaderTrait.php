@@ -44,7 +44,7 @@ if ( ! trait_exists( '\\AxeWP\\Common\\Core\\AssetLoaderTrait' ) ) {
 		 *
 		 * @param non-empty-string $handle    Name of the script. Should be unique.
 		 * @param string           $filename  Path of the script relative to js directory, excluding the .js extension.
-		 * @param string[]         $deps      Optional. An array of registered script handles this script depends on. If not set, the dependencies will be inherited from the asset file.
+		 * @param string[]         $deps      Optional. Registered script handles this script depends on, in addition to the dependencies of the asset file.
 		 * @param ?string          $ver       Optional. String specifying script version number, if not set, the version will be inherited from the asset file.
 		 * @param bool             $in_footer Optional. Whether to enqueue the script before </body> instead of in the <head>.
 		 */
@@ -57,7 +57,7 @@ if ( ! trait_exists( '\\AxeWP\\Common\\Core\\AssetLoaderTrait' ) ) {
 			}
 
 			$asset_src = sprintf( '%s/%s.js', $this->plugin_url . untrailingslashit( $this->assets_dir ), $filename );
-			$deps      = $deps ?: ( $asset['dependencies'] ?? [] );
+			$deps      = array_values( array_unique( array_merge( $asset['dependencies'] ?? [], $deps ) ) );
 			$version   = $ver ?? $asset['version'];
 
 			return wp_register_script(
@@ -74,7 +74,7 @@ if ( ! trait_exists( '\\AxeWP\\Common\\Core\\AssetLoaderTrait' ) ) {
 		 *
 		 * @param string   $handle   Name of the stylesheet. Should be unique.
 		 * @param string   $filename Path of the stylesheet relative to the css directory, excluding the .css extension.
-		 * @param string[] $deps     Optional. An array of registered stylesheet handles this stylesheet depends on, if not set, the version will be inherited from the asset file.
+		 * @param string[] $deps     Optional. An array of registered stylesheet handles this stylesheet depends on.
 		 * @param ?string  $ver      Optional. String specifying style version number, if not set, the version will be inherited from the asset file.
 		 * @param string   $media    Optional. The media for which this stylesheet has been defined.
 		 *                           Default 'all'. Accepts media types like 'all', 'print' and 'screen', or media queries like
@@ -89,10 +89,8 @@ if ( ! trait_exists( '\\AxeWP\\Common\\Core\\AssetLoaderTrait' ) ) {
 			}
 
 			$asset_src = sprintf( '%s/%s.css', $this->plugin_url . untrailingslashit( $this->assets_dir ), $filename );
-			$deps      = $deps ?: [];
 			$version   = $ver ?? $asset['version'];
 
-			// Register as a style.
 			return wp_register_style(
 				$handle,
 				$asset_src,
@@ -159,8 +157,7 @@ if ( ! trait_exists( '\\AxeWP\\Common\\Core\\AssetLoaderTrait' ) ) {
 				_doing_it_wrong(
 					static::class,
 					sprintf(
-						/* translators: 1: The asset filename. 2: The asset file extension. */
-						esc_html__( 'Asset "%1$s.%2$s" is missing. It will not be registered.', 'axewp' ),
+						'Asset "%1$s.%2$s" is missing. It will not be registered.',
 						esc_html( $filename ),
 						esc_html( $extension )
 					),
@@ -187,8 +184,7 @@ if ( ! trait_exists( '\\AxeWP\\Common\\Core\\AssetLoaderTrait' ) ) {
 				_doing_it_wrong(
 					static::class,
 					sprintf(
-						/* translators: %s: The asset filename. */
-						esc_html__( 'Asset file for "%s" is invalid. It will not be registered.', 'axewp' ),
+						'Asset file for "%s" is invalid. It will not be registered.',
 						esc_html( $filename )
 					),
 					'0.1.0'

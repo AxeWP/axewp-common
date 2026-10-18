@@ -113,6 +113,18 @@ final class LateConstantKeyEncryptorTestDouble extends AbstractEncryptor {
 }
 
 /**
+ * Test double whose constant holds WordPress's sample placeholder.
+ */
+final class PlaceholderKeyEncryptorTestDouble extends AbstractEncryptor {
+	/**
+	 * {@inheritDoc}
+	 */
+	protected static function get_constant_key(): string {
+		return 'AXEWP_COMMON_PLACEHOLDER_ENCRYPTION_KEY';
+	}
+}
+
+/**
  * Class - AbstractEncryptorTest
  */
 #[CoversClass( AbstractEncryptor::class )]
@@ -156,6 +168,7 @@ class AbstractEncryptorTest extends TestCase {
 		$this->assertStringStartsWith( self::PREFIX, $encrypted );
 		$this->assertTrue( ConstantKeyEncryptorTestDouble::is_encrypted( $encrypted ) );
 		$this->assertSame( $raw, ConstantKeyEncryptorTestDouble::decrypt( $encrypted ) );
+		$this->assertFalse( ConstantKeyEncryptorTestDouble::needs_reencryption( $encrypted ) );
 	}
 
 	/**
@@ -252,6 +265,7 @@ class AbstractEncryptorTest extends TestCase {
 	public function test_plaintext_is_not_encrypted( string $value ): void {
 		$this->assertFalse( ConstantKeyEncryptorTestDouble::is_encrypted( $value ) );
 		$this->assert_error_code( 'not_encrypted', ConstantKeyEncryptorTestDouble::decrypt( $value ) );
+		$this->assertFalse( ConstantKeyEncryptorTestDouble::needs_reencryption( $value ) );
 	}
 
 	/**
@@ -318,8 +332,6 @@ class AbstractEncryptorTest extends TestCase {
 	 * Test that classes sharing the LOGGED_IN_KEY fallback can't decrypt each other's values.
 	 */
 	public function test_fallback_key_is_scoped_per_class(): void {
-		$this->setExpectedIncorrectUsage( AbstractEncryptor::class . '::get_keys' );
-
 		$first  = FallbackKeyEncryptorTestDouble::encrypt( 'secret' );
 		$second = OtherFallbackKeyEncryptorTestDouble::encrypt( 'secret' );
 
@@ -332,18 +344,49 @@ class AbstractEncryptorTest extends TestCase {
 	}
 
 	/**
-	 * Test that values encrypted with the LOGGED_IN_KEY fallback still decrypt once the constant is defined.
+	 * Test that values encrypted with the LOGGED_IN_KEY fallback still decrypt once the constant is defined, and need re-encryption until they're re-encrypted.
 	 */
-	public function test_fallback_key_still_decrypts_after_constant_is_defined(): void {
-		$this->setExpectedIncorrectUsage( AbstractEncryptor::class . '::get_keys' );
+	public function test_fallback_key_values_migrate_after_constant_is_defined(): void {
 		$this->assertFalse( defined( 'AXEWP_COMMON_LATE_ENCRYPTION_KEY' ) );
 
 		$encrypted = LateConstantKeyEncryptorTestDouble::encrypt( 'secret' );
 		$this->assertIsString( $encrypted );
+		$this->assertFalse( LateConstantKeyEncryptorTestDouble::needs_reencryption( $encrypted ) );
 
 		define( 'AXEWP_COMMON_LATE_ENCRYPTION_KEY', 'late-constant-key-value' );
 
 		$this->assertSame( 'secret', LateConstantKeyEncryptorTestDouble::decrypt( $encrypted ) );
+		$this->assertTrue( LateConstantKeyEncryptorTestDouble::needs_reencryption( $encrypted ) );
+
+		$reencrypted = LateConstantKeyEncryptorTestDouble::encrypt( 'secret' );
+		$this->assertIsString( $reencrypted );
+		$this->assertFalse( LateConstantKeyEncryptorTestDouble::needs_reencryption( $reencrypted ) );
+	}
+
+	/**
+	 * Test that the fallback is reported until the constant is defined, without any notice (the test fails on unexpected incorrect usage).
+	 */
+	public function test_is_using_fallback_key(): void {
+		$this->assertTrue( FallbackKeyEncryptorTestDouble::is_using_fallback_key() );
+		$this->assertFalse( ConstantKeyEncryptorTestDouble::is_using_fallback_key() );
+
+		$this->assertIsString( FallbackKeyEncryptorTestDouble::encrypt( 'secret' ) );
+	}
+
+	/**
+	 * Test that the sample placeholder is treated as an undefined key, so the fallback is used.
+	 */
+	public function test_placeholder_key_is_treated_as_undefined(): void {
+		if ( ! defined( 'AXEWP_COMMON_PLACEHOLDER_ENCRYPTION_KEY' ) ) {
+			define( 'AXEWP_COMMON_PLACEHOLDER_ENCRYPTION_KEY', 'put your unique phrase here' );
+		}
+
+		$this->assertTrue( PlaceholderKeyEncryptorTestDouble::is_using_fallback_key() );
+
+		$encrypted = PlaceholderKeyEncryptorTestDouble::encrypt( 'secret' );
+
+		$this->assertIsString( $encrypted );
+		$this->assertSame( 'secret', PlaceholderKeyEncryptorTestDouble::decrypt( $encrypted ) );
 	}
 
 	/**

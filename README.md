@@ -43,9 +43,9 @@ $secret = Encryptor::decrypt( $stored );
 
 `encrypt()` and `decrypt()` return a `WP_Error` on failure. `decrypt()` returns `not_encrypted` if the value lacks the prefix, and `decryption_failed` if it's malformed, was tampered with, or was encrypted with a different key. `is_encrypted()` only checks the prefix.
 
-Set the constant to a long random string, e.g. from `openssl rand -base64 32`. If it isn't set, `LOGGED_IN_KEY` is used instead (with a `_doing_it_wrong()` notice), and values become unreadable if the salts are rotated. If neither is set, a `LogicException` is thrown.
+Set the constant to a long random string, e.g. from `openssl rand -base64 32`. If it isn't set, `LOGGED_IN_KEY` is used instead, and values become unreadable if the salts are rotated. The `wp-config-sample.php` placeholder phrase counts as undefined. The library emits no notice for the fallback: call `is_using_fallback_key()` to surface it to site owners. If no key exists at all, `encrypt()` and `decrypt()` return a `WP_Error` (`no_encryption_key`).
 
-After you add the constant, values encrypted with `LOGGED_IN_KEY` still decrypt. Re-encrypt them to move them to the new key.
+After you add the constant, values encrypted with `LOGGED_IN_KEY` still decrypt, and stay tied to it until re-encrypted. Re-encrypt the values for which `needs_reencryption()` is true to move them to the new key.
 
 Subclasses can override these static properties:
 

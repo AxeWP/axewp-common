@@ -274,9 +274,9 @@ class AssetLoaderTraitTest extends TestCase {
 	}
 
 	/**
-	 * Tests the scripts can have their deps overloaded.
+	 * Tests that register_script adds the passed dependencies to those of the asset manifest.
 	 */
-	public function test_register_script_allows_overriding_dependencies_and_version(): void {
+	public function test_register_script_merges_dependencies_with_the_asset_manifest(): void {
 		$loader = new AssetLoaderTraitTestDouble();
 
 		$this->create_asset( 'editor.js', '// editor' );
@@ -286,7 +286,7 @@ class AssetLoaderTraitTest extends TestCase {
 
 		$registered = wp_scripts()->registered['test-editor'] ?? null;
 		$this->assertNotNull( $registered );
-		$this->assertSame( [ 'wp-data' ], $registered->deps );
+		$this->assertSame( [ 'wp-i18n', 'wp-data' ], $registered->deps );
 		$this->assertSame( '9.9.9', $registered->ver );
 	}
 
@@ -319,7 +319,7 @@ class AssetLoaderTraitTest extends TestCase {
 	}
 
 	/**
-	 * Tests that register style allows overriding dependencies and version.
+	 * Tests that register_style allows overriding dependencies and version.
 	 */
 	public function test_register_style_allows_overriding_dependencies_and_version(): void {
 		$loader = new AssetLoaderTraitTestDouble();

@@ -15,7 +15,7 @@ namespace AxeWP\Common\Contracts\Traits;
 // Bail if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-if ( ! trait_exists( '\\AxeWP\\Common\\Traits\\Singleton' ) ) {
+if ( ! trait_exists( '\\AxeWP\\Common\\Contracts\\Traits\\Singleton' ) ) {
 	/**
 	 * Singleton trait.
 	 */
@@ -56,8 +56,7 @@ if ( ! trait_exists( '\\AxeWP\\Common\\Traits\\Singleton' ) ) {
 			_doing_it_wrong(
 				__FUNCTION__,
 				sprintf(
-					// translators: %s: Class name.
-					esc_html__( 'The %s class should not be cloned.', 'axewp' ),
+					'The %s class should not be cloned.',
 					esc_html( static::class ),
 				),
 				'0.1.0'
@@ -75,8 +74,7 @@ if ( ! trait_exists( '\\AxeWP\\Common\\Traits\\Singleton' ) ) {
 			_doing_it_wrong(
 				__FUNCTION__,
 				sprintf(
-					// translators: %s: Class name.
-					esc_html__( 'De-serializing instances of %s is not allowed.', 'axewp' ),
+					'De-serializing instances of %s is not allowed.',
 					esc_html( static::class ),
 				),
 				'0.1.0'

@@ -9,6 +9,7 @@
 /.* export-ignore
 
 # Root files that are not needed for distribution.
+/axewp-common.php export-ignore
 /composer.lock export-ignore
 /package-lock.json export-ignore
 /package.json export-ignore

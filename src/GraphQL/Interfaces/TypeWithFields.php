@@ -20,13 +20,13 @@ if ( ! interface_exists( '\\AxeWP\\Common\\GraphQL\\Interfaces\\TypeWithFields' 
 	 * phpcs:disable SlevomatCodingStandard.Namespaces.FullyQualifiedClassNameInAnnotation -- PHPStan formatting.
 	 *
 	 * @phpstan-type FieldConfigArgs array{
-	 *   type:string|array<string,string|array<string,string>>,
+	 *   type:string|array<string,string|array<string,string|array<string,string>>>,
 	 *   description:callable(): string,
 	 *   defaultValue?:mixed
 	 * }
 	 *
 	 * @phpstan-type FieldConfig array{
-	 *   type:string|array<string,string|array<string,string>>,
+	 *   type:string|array<string,string|array<string,string|array<string,string>>>,
 	 *   description:callable(): string,
 	 *   args?:array<string,FieldConfigArgs>,
 	 *   resolve?:callable,
