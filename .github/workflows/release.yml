@@ -32,7 +32,7 @@ jobs:
     name: Upload GraphQL Schema
     needs: release-please
     if: ${{ needs.release-please.outputs.release_created == 'true' }}
-    uses: AxeWP/plugin-infra/.github/workflows/reusable-upload-schema-artifact.yml@a98dead25c1052f9f9163e2105ed7922e1333a88 # AxeWP/plugin-infra#42
+    uses: AxeWP/plugin-infra/.github/workflows/reusable-upload-schema-artifact.yml@47e89d06e15846d34d5f6eb7dfcd3a4dccd83750 # v0.4.0
     with:
       php-version: '8.5'
       plugin-slug: 'axewp-common'

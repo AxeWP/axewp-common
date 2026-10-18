@@ -77,7 +77,7 @@ jobs:
     name: actionlint
     needs: detect
     if: needs.detect.outputs.actionlint == 'true'
-    uses: AxeWP/plugin-infra/.github/workflows/reusable-actionlint.yml@a98dead25c1052f9f9163e2105ed7922e1333a88 # AxeWP/plugin-infra#42
+    uses: AxeWP/plugin-infra/.github/workflows/reusable-actionlint.yml@47e89d06e15846d34d5f6eb7dfcd3a4dccd83750 # v0.4.0
     permissions:
       contents: read
 
@@ -85,29 +85,27 @@ jobs:
     name: PHPCS
     needs: detect
     if: needs.detect.outputs.php == 'true' || needs.detect.outputs.phpcs == 'true'
-    uses: AxeWP/plugin-infra/.github/workflows/reusable-phpcs.yml@a98dead25c1052f9f9163e2105ed7922e1333a88 # AxeWP/plugin-infra#42
+    uses: AxeWP/plugin-infra/.github/workflows/reusable-phpcs.yml@47e89d06e15846d34d5f6eb7dfcd3a4dccd83750 # v0.4.0
     permissions:
       contents: read
     with:
       php-version: ${{ needs.detect.outputs.php-version }}
-    secrets: inherit
 
   phpstan:
     name: PHPStan
     needs: detect
     if: needs.detect.outputs.php == 'true' || needs.detect.outputs.phpstan == 'true'
-    uses: AxeWP/plugin-infra/.github/workflows/reusable-phpstan.yml@a98dead25c1052f9f9163e2105ed7922e1333a88 # AxeWP/plugin-infra#42
+    uses: AxeWP/plugin-infra/.github/workflows/reusable-phpstan.yml@47e89d06e15846d34d5f6eb7dfcd3a4dccd83750 # v0.4.0
     permissions:
       contents: read
     with:
       php-version: ${{ needs.detect.outputs.php-version }}
-    secrets: inherit
 
   phpunit:
     name: PHPUnit (PHP ${{ matrix.php }}, WP ${{ matrix.wp }})
     needs: detect
     if: needs.detect.outputs.php == 'true' || needs.detect.outputs.phpunit == 'true'
-    uses: AxeWP/plugin-infra/.github/workflows/reusable-phpunit.yml@a98dead25c1052f9f9163e2105ed7922e1333a88 # AxeWP/plugin-infra#42
+    uses: AxeWP/plugin-infra/.github/workflows/reusable-phpunit.yml@47e89d06e15846d34d5f6eb7dfcd3a4dccd83750 # v0.4.0
     permissions:
       contents: read
     strategy:
@@ -123,27 +121,30 @@ jobs:
       php-version: ${{ matrix.php }}
       wp-version: ${{ matrix.wp }}
       coverage: ${{ matrix.coverage || false }}
-    secrets: inherit
+    secrets:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   js:
     name: JS Checks
     needs: detect
     if: needs.detect.outputs.js == 'true'
-    uses: AxeWP/plugin-infra/.github/workflows/reusable-js-lints.yml@a98dead25c1052f9f9163e2105ed7922e1333a88 # AxeWP/plugin-infra#42
+    uses: AxeWP/plugin-infra/.github/workflows/reusable-js-lints.yml@47e89d06e15846d34d5f6eb7dfcd3a4dccd83750 # v0.4.0
+    permissions:
+      contents: read
     with:
       eslint: false
       prettier: true
       stylelint: false
       tsc: true
-    secrets: inherit
 
   graphql:
     name: GraphQL Schema Linter
     needs: detect
-    uses: AxeWP/plugin-infra/.github/workflows/reusable-graphql-schema-linter.yml@a98dead25c1052f9f9163e2105ed7922e1333a88 # AxeWP/plugin-infra#42
+    uses: AxeWP/plugin-infra/.github/workflows/reusable-graphql-schema-linter.yml@47e89d06e15846d34d5f6eb7dfcd3a4dccd83750 # v0.4.0
+    permissions:
+      contents: read
     with:
       php-version: ${{ needs.detect.outputs.php-version }}
       plugin-slug: 'axewp-common'
       # Enable once a release has published a schema.graphql asset, otherwise the download fails.
       # previous-schema-url: 'https://github.com/AxeWP/axewp-common/releases/latest/download/schema.graphql'
-    secrets: inherit
