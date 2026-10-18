@@ -4,6 +4,27 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to a modified version of [Semantic Versioning](./README.md#updating-and-versioning).
 
+## [0.4.0](https://github.com/AxeWP/axewp-common/compare/v0.3.0...v0.4.0) (2026-10-18)
+
+
+### ⚠ BREAKING CHANGES
+
+* harden encryptor key handling and tidy library internals ([#80](https://github.com/AxeWP/axewp-common/issues/80))
+
+### Bug Fixes
+
+* **deps-dev:** bump @axepress/plugin-infra ([#72](https://github.com/AxeWP/axewp-common/issues/72)) ([496a686](https://github.com/AxeWP/axewp-common/commit/496a686d3270fa74107b82ab41c534e5bc55cc5f))
+* **deps-dev:** bump http-cache-semantics from 4.2.0 to 4.3.0 ([#78](https://github.com/AxeWP/axewp-common/issues/78)) ([90b95bb](https://github.com/AxeWP/axewp-common/commit/90b95bb32360b54179aa69807fc92c8f1cc74fb9))
+* **deps-dev:** bump lefthook ([#76](https://github.com/AxeWP/axewp-common/issues/76)) ([1c20cc6](https://github.com/AxeWP/axewp-common/commit/1c20cc61129f146af5796b6109675050f4d7686a))
+* **deps-dev:** bump the composer-dev-minor-patch group with 2 updates ([#75](https://github.com/AxeWP/axewp-common/issues/75)) ([83ebd6c](https://github.com/AxeWP/axewp-common/commit/83ebd6c8bd885eaefad1cd6814a09292a88b5d8e))
+* **deps:** bump brace-expansion ([#74](https://github.com/AxeWP/axewp-common/issues/74)) ([eccb895](https://github.com/AxeWP/axewp-common/commit/eccb895ccda61b502ab04f6e73df5e97e7c50613))
+* harden encryptor key handling and tidy library internals ([#80](https://github.com/AxeWP/axewp-common/issues/80)) ([6584827](https://github.com/AxeWP/axewp-common/commit/65848277f3fc8ee795be41f39172a2d6c55b8e67))
+
+
+### Miscellaneous Chores
+
+* **ci:** bump the github-actions-updates group with 2 updates ([#77](https://github.com/AxeWP/axewp-common/issues/77)) ([7654251](https://github.com/AxeWP/axewp-common/commit/765425190e36a2f5d59bdb3ff700f8324f8fc792))
+
 ## [0.3.0](https://github.com/AxeWP/axewp-common/compare/v0.2.0...v0.3.0) (2026-09-28)
 
 
