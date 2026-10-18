@@ -34,22 +34,27 @@ if ( ! trait_exists( '\\AxeWP\\Common\\GraphQL\\Traits\\TypeResolverTrait' ) ) {
 		 *
 		 * @param mixed $value The value from the resolver of the parent field.
 		 *
-		 * @return ?TypeDef The resolved type definition, or null if resolution fails.
-		 * @throws \UnexpectedValueException If the resolved type name is empty or invalid.
+		 * @return TypeDef The resolved type definition.
+		 * @throws \UnexpectedValueException If the resolved type name is empty or isn't a registered type.
 		 */
 		protected static function resolve_type( $value ) {
 			$type_name = static::get_resolved_type_name( $value );
 
 			if ( empty( $type_name ) ) {
 				throw new \UnexpectedValueException(
-				// translators: the GraphQL type name.
-					sprintf( esc_html__( 'The value passed to %s failed to resolve to a valid GraphQL type', 'axewp' ), static::class )
+					sprintf( 'The value passed to %s failed to resolve to a valid GraphQL type', static::class )
 				);
 			}
 
-			$type_registry = WPGraphQL::get_type_registry();
+			$type = WPGraphQL::get_type_registry()->get_type( $type_name );
 
-			return $type_registry->get_type( $type_name );
+			if ( null === $type ) {
+				throw new \UnexpectedValueException(
+					sprintf( '%1$s resolved the type name "%2$s", which is not registered in the GraphQL schema.', static::class, $type_name )
+				);
+			}
+
+			return $type;
 		}
 	}
 }

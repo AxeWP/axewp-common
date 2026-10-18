@@ -23,7 +23,7 @@ if ( ! class_exists( '\\AxeWP\\Common\\GraphQL\\Abstracts\\ConnectionType' ) ) {
 	 * phpcs:disable SlevomatCodingStandard.Namespaces.FullyQualifiedClassNameInAnnotation -- PHPStan formatting.
 	 *
 	 * @phpstan-type ConnectionArgsConfig array{
-	 *  type: string|array<string,string|array<string,string>>,
+	 *  type: string|array<string,string|array<string,string|array<string,string>>>,
 	 *  description: callable():string,
 	 *  defaultValue?: mixed
 	 * }

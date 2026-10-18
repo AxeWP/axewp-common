@@ -65,4 +65,16 @@ class TypeResolverTraitTest extends TestCase {
 
 		TypeResolverTraitTestDouble::call_resolve_type( [] );
 	}
+
+	/**
+	 * Test that resolve_type names the type when it isn't registered.
+	 */
+	public function test_resolve_type_throws_when_type_is_not_registered(): void {
+		WPGraphQL::get_schema();
+
+		$this->expectException( \UnexpectedValueException::class );
+		$this->expectExceptionMessage( 'NotARegisteredType' );
+
+		TypeResolverTraitTestDouble::call_resolve_type( [ 'type' => 'NotARegisteredType' ] );
+	}
 }

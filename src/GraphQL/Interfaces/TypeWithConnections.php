@@ -20,7 +20,7 @@ if ( ! interface_exists( '\\AxeWP\\Common\\GraphQL\\Interfaces\\TypeWithConnecti
 	 * phpcs:disable SlevomatCodingStandard.Namespaces.FullyQualifiedClassNameInAnnotation -- PHPStan formatting.
 	 *
 	 * @phpstan-type ConnectionConfigArgs array{
-	 *   type: string|array<string,string|array<string,string>>,
+	 *   type: string|array<string,string|array<string,string|array<string,string>>>,
 	 *   description: callable(): string,
 	 *   defaultValue?: mixed
 	 * }
