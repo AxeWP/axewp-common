@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to a modified version of [Semantic Versioning](./README.md#updating-and-versioning).
 
+## [0.4.1](https://github.com/AxeWP/axewp-common/compare/v0.4.0...v0.4.1) (2026-10-31)
+
+
+### Bug Fixes
+
+* **deps-dev:** bump fast-uri from 3.1.8 to 3.1.9 ([#81](https://github.com/AxeWP/axewp-common/issues/81)) ([9b4bc35](https://github.com/AxeWP/axewp-common/commit/9b4bc35b64d6f1601619c2204776dc9734fa4e5e))
+
 ## [0.4.0](https://github.com/AxeWP/axewp-common/compare/v0.3.0...v0.4.0) (2026-10-18)
 
 
