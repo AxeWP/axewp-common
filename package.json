@@ -22,7 +22,7 @@
 	},
 	"devDependencies": {
 		"@axepress/plugin-infra": "^0.4.0",
-		"@graphql-inspector/cli": "^7.0.1",
+		"@graphql-inspector/cli": "^7.0.2",
 		"@wordpress/env": "^11.17.0",
 		"@wordpress/prettier-config": "^4.57.0",
 		"graphql": "^16.14.2",
