@@ -4,6 +4,25 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to a modified version of [Semantic Versioning](./README.md#updating-and-versioning).
 
+## [0.4.1](https://github.com/AxeWP/axewp-common/compare/v0.4.0...v0.4.1) (2026-11-17)
+
+
+### Bug Fixes
+
+* **deps-dev:** bump @graphql-inspector/cli ([#84](https://github.com/AxeWP/axewp-common/issues/84)) ([bbd0fb2](https://github.com/AxeWP/axewp-common/commit/bbd0fb244c772076d8eda0877c5c435995b73f0a))
+* **deps-dev:** bump fast-uri from 3.1.8 to 3.1.9 ([#81](https://github.com/AxeWP/axewp-common/issues/81)) ([9b4bc35](https://github.com/AxeWP/axewp-common/commit/9b4bc35b64d6f1601619c2204776dc9734fa4e5e))
+* **deps-dev:** bump fast-xml-parser from 5.11.2 to 5.12.0 ([#87](https://github.com/AxeWP/axewp-common/issues/87)) ([9f5c180](https://github.com/AxeWP/axewp-common/commit/9f5c1806f923b281beb526ffa23703233ecb4e03))
+* **deps-dev:** bump fast-xml-parser from 5.12.0 to 5.12.1 ([#88](https://github.com/AxeWP/axewp-common/issues/88)) ([9963554](https://github.com/AxeWP/axewp-common/commit/9963554d886de0288f753ea88156a0a2727b7066))
+* **deps-dev:** bump graphql ([#90](https://github.com/AxeWP/axewp-common/issues/90)) ([2e9c9f1](https://github.com/AxeWP/axewp-common/commit/2e9c9f12afb9f7315ab51304b38dd43e4a2cbe8b))
+* **deps-dev:** bump the composer-dev-minor-patch group with 2 updates ([#85](https://github.com/AxeWP/axewp-common/issues/85)) ([453320a](https://github.com/AxeWP/axewp-common/commit/453320a170b08b52448849c5c5220937989ecd07))
+* **deps-dev:** bump the composer-dev-minor-patch group with 2 updates ([#89](https://github.com/AxeWP/axewp-common/issues/89)) ([2a87cb9](https://github.com/AxeWP/axewp-common/commit/2a87cb98517cad612be8aa2605b5b269de2b7ab5))
+* **deps-dev:** bump the composer-dev-minor-patch group with 3 updates ([#83](https://github.com/AxeWP/axewp-common/issues/83)) ([95ce601](https://github.com/AxeWP/axewp-common/commit/95ce601492c0857ee4a84997b75785cc904edaaa))
+
+
+### Miscellaneous Chores
+
+* **ci:** bump amannn/action-semantic-pull-request ([#86](https://github.com/AxeWP/axewp-common/issues/86)) ([72691a5](https://github.com/AxeWP/axewp-common/commit/72691a501eb34191873b179517af67b3844d0abd))
+
 ## [0.4.0](https://github.com/AxeWP/axewp-common/compare/v0.3.0...v0.4.0) (2026-10-18)
 
 
